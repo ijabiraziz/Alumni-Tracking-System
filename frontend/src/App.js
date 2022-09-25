@@ -8,6 +8,7 @@ import MSAlumniScreen from "./screens/MSAlumniScreen";
 import PHDAlumniScreen from "./screens/PHDAlumniScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import LogoutScreen from "./screens/LogoutScreen";
+import LoginScreen from './screens/LoginScreen';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     <Router>
       <Routes>
             <Route path="/" exact element={<HomeScreen />} />
+            <Route path="/login" exact element={<LoginScreen />} />
             <Route path="/dashboard" element={<HomeScreen/>} />
             <Route path="/profile" element={<ProfileScreen />} />
             <Route path="/reports" element={<ReportScreen />} />
