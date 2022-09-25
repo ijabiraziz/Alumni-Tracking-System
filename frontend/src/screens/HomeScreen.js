@@ -1,5 +1,5 @@
 import React from "react";
-import "./../theme/HomeScreen.css";
+import "./../styles/HomeScreen.css";
 import Sidebar from "../components/Sidebar";
 import Main from "../components/Main";
 import Right from "../components/Right";

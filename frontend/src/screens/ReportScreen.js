@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import "./../theme/ReportScreen.css";
+import "./../styles/ReportScreen.css";
 
 function ReportScreen() {
   return (

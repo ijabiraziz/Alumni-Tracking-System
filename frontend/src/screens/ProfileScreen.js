@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import "./../theme/ProfileScreen.css";
+import "./../styles/ProfileScreen.css";
 
 function ProfileScreen() {
   return (
