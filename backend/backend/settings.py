@@ -1,4 +1,7 @@
+import os
 from pathlib import Path
+import datetime
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,12 +11,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&%cl1ftb5kwx1^ucvgi081m0=&rmef64&!n@-tk)y5qn-$y+1j'
+SECRET_KEY = 'django-insecure-0^e=_fnpyj7ix7evb_1x$@m)71t98jnb4)^7mfr2w+ce!-kc-m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# added By Me
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=100),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=100),
+}
 
 
 # Application definition
@@ -26,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'djoser',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -70,20 +91,11 @@ DATABASES = {
     }
 }
 
-# DATABASES={
-#    'default':{
-#       'ENGINE':'django.db.backends.postgresql_psycopg2',
-#       'NAME':'postgres',
-#       'USER':'postgres',
-#       'PASSWORD':'0315',
-#       'HOST':'localhost',
-#       'PORT':'5432',
-#    }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -99,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -123,4 +134,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Cutom fileds
+AUTH_PROFILE_MODEL = 'accounts.MyUser'
 
+AUTH_USER_MODEL = 'accounts.MyUser'
