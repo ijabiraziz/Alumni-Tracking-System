@@ -37,7 +37,15 @@ class MyUserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+    
+    
+class Department(models.Model):
+    name = models.CharField(max_length=200, null=True,blank=True)
 
+    
+    def __str__(self) -> str:
+        return self.name
+    
 
 class MyUser(AbstractBaseUser):
     email = models.EmailField(
@@ -47,6 +55,8 @@ class MyUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     name = models.CharField(max_length=50, null=True,blank=True)
+    department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
+    
 
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
@@ -74,3 +84,41 @@ class MyUser(AbstractBaseUser):
         return self.is_admin
 
 
+    def create_superuser(self, email, password=None):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+    
+
+
+
+    
+class Alumni(models.Model):
+    department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
+    name = models.CharField(max_length=200, null=True,blank=True)
+    createdAt =models.DateTimeField(auto_now_add=True)
+
+    
+    def __str__(self) -> str:
+        return self.name
+    
+    
+class Report(models.Model):
+    name = models.CharField(max_length=200, null=True,blank=True)
+    createdAt =models.DateTimeField(auto_now_add=True)
+
+    
+    def __str__(self) -> str:
+        return self.name
+    
+
+    

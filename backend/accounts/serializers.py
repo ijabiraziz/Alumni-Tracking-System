@@ -1,12 +1,11 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import MyUser
+from .models import MyUser,Alumni,Report
 
 
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MyUser
         fields = '__all__'
@@ -38,4 +37,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
+        
+class AlumniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alumni 
+        fields = '__all__'
+        
+class AlumniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = '__all__'
+    
 
