@@ -6,7 +6,7 @@ function ReportScreen() {
   return (
     <div className="container">
     {/* Sidebar */}
-    <Sidebar loc={2}/>
+    <Sidebar loc={1}/>
     
     {/* Reports Screen */}
     <div className="profile-container">     

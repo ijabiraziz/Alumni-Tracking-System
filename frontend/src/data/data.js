@@ -5,6 +5,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon  from "@mui/icons-material/Person";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import SerachIcon from "@mui/icons-material/Search"
 
 export const SidebarData = [
      {
@@ -13,14 +14,14 @@ export const SidebarData = [
           heading : "Dashboard",
      },
      {
-          linkTo: '/profile',
-          icon :< PersonIcon/>,
-          heading : "Profile",
-     },
-     {
           linkTo: '/reports',
           icon : <AnalyticsIcon/>,
           heading : "Reports",
+     },
+     {
+          linkTo: '/search',
+          icon :< SerachIcon/>,
+          heading : "Search",
      },
      {
           linkTo: '/all',

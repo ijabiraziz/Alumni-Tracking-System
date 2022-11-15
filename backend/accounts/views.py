@@ -36,6 +36,7 @@ def user_detail(request,pk):
     
 @api_view(['POST'])
 def register_user(request):
+    print(request.data)
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

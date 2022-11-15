@@ -6,13 +6,8 @@ from django.contrib.auth.models import (
 )
 
 
-# Create your models here
 class MyUserManager(BaseUserManager):
     def create_user(self, email,password=None):
-        """
-        Creates and saves a User with the given email, date of
-        birth and password.
-        """
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -42,7 +37,6 @@ class MyUserManager(BaseUserManager):
 class Department(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
 
-    
     def __str__(self) -> str:
         return self.name
     
@@ -54,10 +48,13 @@ class MyUser(AbstractBaseUser):
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    
     name = models.CharField(max_length=50, null=True,blank=True)
     department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
+    phone_number = models.CharField(max_length=20,null=True)
+    avator = models.ImageField(upload_to ='uploads/',null=True)
     
-
+    
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
     # REQUIRED_FIELDS = ['date_of_birth']
@@ -106,7 +103,18 @@ class Alumni(models.Model):
     department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=200, null=True,blank=True)
     createdAt =models.DateTimeField(auto_now_add=True)
-
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, null=True,blank=True)
+    cgpa = models.FloatField()
+    is_employed=models.BooleanField(default=False)
+    is_student=models.BooleanField(default=False)
+    location = models.CharField(max_length=200)
+    company= models.CharField(max_length=200)
+    position = models.CharField(max_length=200)
+    batch = models.IntegerField()
+    program = models.ForeignKey('accounts.Program',on_delete=models.CASCADE)
+    avator = models.ImageField()
+    
     
     def __str__(self) -> str:
         return self.name
@@ -115,10 +123,22 @@ class Alumni(models.Model):
 class Report(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
     createdAt =models.DateTimeField(auto_now_add=True)
+    report = models.FileField(upload_to ='uploads/')
+    
 
     
     def __str__(self) -> str:
         return self.name
     
 
+class Program(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self) -> str:
+        return self.name
+    
+    
+    
+    
+        
     

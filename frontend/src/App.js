@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomeScreen from "./screens/HomeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import SearchScreen from "./screens/SearchScreen";
 import ReportScreen from "./screens/ReportScreen";
 import AllAlumniScreen from "./screens/AllAlumniScreen";
 import BSAlumniScreen from "./screens/BSAlumniScreen";
@@ -8,7 +8,8 @@ import MSAlumniScreen from "./screens/MSAlumniScreen";
 import PHDAlumniScreen from "./screens/PHDAlumniScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import LogoutScreen from "./screens/LogoutScreen";
-import LoginScreen from './screens/LoginScreen';
+import L1 from './screens/L1';
+import RegisterScreen from './screens/RegisterScreen';
 
 
 function App() {
@@ -16,9 +17,10 @@ function App() {
     <Router>
       <Routes>
             <Route path="/" exact element={<HomeScreen />} />
-            <Route path="/login" exact element={<LoginScreen />} />
+            <Route path="/login"  element={<L1 />} />
+            <Route path="/register"  element={<RegisterScreen />} />
             <Route path="/dashboard" element={<HomeScreen/>} />
-            <Route path="/profile" element={<ProfileScreen />} />
+            <Route path="/search" element={<SearchScreen />} />
             <Route path="/reports" element={<ReportScreen />} />
             <Route path="/all" element={<AllAlumniScreen />} />
             <Route path="/bs" element={<BSAlumniScreen />} />
