@@ -1,6 +1,5 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import "./../styles/AllAlumniScreen.css";
 
 function AllAlumniScreen() {
   return (

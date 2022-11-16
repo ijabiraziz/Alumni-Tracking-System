@@ -8,8 +8,9 @@ import MSAlumniScreen from "./screens/MSAlumniScreen";
 import PHDAlumniScreen from "./screens/PHDAlumniScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import LogoutScreen from "./screens/LogoutScreen";
-import L1 from './screens/L1';
+import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import AddAlumniScreen from './screens/AddAlumniScreen';
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
     <Router>
       <Routes>
             <Route path="/" exact element={<HomeScreen />} />
-            <Route path="/login"  element={<L1 />} />
+            <Route path="/login"  element={<LoginScreen />} />
             <Route path="/register"  element={<RegisterScreen />} />
             <Route path="/dashboard" element={<HomeScreen/>} />
             <Route path="/search" element={<SearchScreen />} />
@@ -27,6 +28,7 @@ function App() {
             <Route path="/ms" element={<MSAlumniScreen />} />
             <Route path="/phd" element={<PHDAlumniScreen />} />
             <Route path="/settings" element={<SettingsScreen />} />
+            <Route path="/addAlumni" element={<AddAlumniScreen />} />
 
             {/*  I am passing id as a param */}
             {/* <Route path="/product/:id" element={<ProductScreen />} /> */}
