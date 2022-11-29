@@ -4,6 +4,10 @@ import Right from "../components/Right";
 import React, { useState } from 'react'
 import Logo from '../components/Logo';
 import { SidebarData } from "../data/data";
+import Reports from "../components/Reports";
+import Search from "../components/Search";
+import AlumniList from "../components/AlumniList";
+import Setting from "../components/Setting";
 
 
 function HomeScreen() {
@@ -14,6 +18,7 @@ function HomeScreen() {
     setSelected(index);
   }
   return (
+    
     <div className="container">
       {/* Sidebar */}
       <aside>
@@ -33,13 +38,13 @@ function HomeScreen() {
 
       {
         selected==0?  <Main header={'Dashboard'}/>
-        :selected==1? <div>1</div>
-        :selected==2? <div>2</div>
-        :selected==3? <div>3</div>
-        :selected==4? <div>4</div>
-        :selected==5? <div>5</div>
-        :selected==6? <div>6</div>
-        :selected==7? <div>7</div>
+        :selected==1? <Reports header={'Reports'}/>
+        :selected==2? <Search/>
+        :selected==3? <AlumniList header={'All Alumnis'}/>
+        :selected==4? <AlumniList header={'Dashboard'}/>
+        :selected==5? <AlumniList header={'Dashboard'}/>
+        :selected==6? <AlumniList header={'Dashboard'}/>
+        :selected==7? <Setting />
         :<div>8</div>
       }
 

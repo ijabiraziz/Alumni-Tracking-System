@@ -22,13 +22,38 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 
 
 export default function MaxWidthDialog() {
+  const currencies = [
+    {
+      value: 'USD',
+      label: '$',
+    },
+    {
+      value: 'EUR',
+      label: '€',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
+  
 
+  const [currency, setCurrency] = React.useState('EUR');
+
+  const [program, setProgram] = React.useState('BS');
+  const [openFilePopup, setOpenFilePopup] = React.useState(false);
+
+  
 
   
   const [open, setOpen] = React.useState(false);
@@ -61,9 +86,48 @@ export default function MaxWidthDialog() {
     setOpen(true);
   };
 
+  const handleClickFOpen = () => {
+    setOpenFilePopup(true);
+  };
+  const handleClickFClose = () => {
+    setOpenFilePopup(false);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
+
+
+
+  const [selectedFile, setSelectedFile] = React.useState();
+	const [isSelected, setIsSelected] = React.useState(false);
+
+	const changeHandler = (event) => {
+		setSelectedFile(event.target.files[0]);
+		setIsSelected(true);
+	};
+
+	const handleSubmission = () => {
+		const formData = new FormData();
+
+		formData.append('File', selectedFile);
+
+		fetch(
+			'https://freeimage.host/api/1/upload?key=<YOUR_API_KEY>',
+			{
+				method: 'POST',
+				body: formData,
+			}
+		)
+			.then((response) => response.json())
+			.then((result) => {
+				console.log('Success:', result);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	};
+
 
 
 
@@ -79,7 +143,7 @@ export default function MaxWidthDialog() {
         <h3>Add Single Alumni</h3>
       </div>
     </div>
-    <div className="item add-product">
+    <div onClick={handleClickFOpen} className="item add-product">
       <div>
         <span><AddIcon/></span>
         <h3>Upload CSV File</h3>
@@ -105,11 +169,31 @@ export default function MaxWidthDialog() {
         </DialogTitle>
         <DialogContent>
           
+          
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <div>
       
       
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+     
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Name</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Name"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Email</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Email"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
@@ -131,111 +215,189 @@ export default function MaxWidthDialog() {
             label="Password"
           />
         </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            label="Amount"
-          />
-        </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            label="Amount"
-          />
-        </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            label="Amount"
-          />
-        </FormControl>
-
-      </div>
-      <div>
-
-
-        <FormControl fullWidth sx={{ m: 1 }} variant="filled">
-          <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
-          <FilledInput
-            id="filled-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-          />
-        </FormControl>
-      </div>
-      <div>
         <TextField
-          label="With normal TextField"
-          id="standard-start-adornment"
-          sx={{ m: 1, width: '25ch' }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">kg</InputAdornment>,
-          }}
-          variant="standard"
-        />
-        <FormControl variant="standard" sx={{ m: 1, mt: 3, width: '25ch' }}>
-          <Input
-            id="standard-adornment-weight"
-            value={values.weight}
-            onChange={handleChange('weight')}
-            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby="standard-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-          <FormHelperText id="standard-weight-helper-text">Weight</FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-          <Input
-            id="standard-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-          <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
-          <Input
-            id="standard-adornment-amount"
+          id="outlined-select-currency"
+          select
+          label="Department"
+          value={currency}
+          onChange={handleChange}
+          fullWidth sx={{ m: 1 }}
+        >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Phone</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
             value={values.amount}
             onChange={handleChange('amount')}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            label="Phone"
           />
         </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Location</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Location"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Company</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Company"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Position</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Position"
+          />
+        </FormControl>
+
+
+      </div>
+
+      <div>
+      <FormControl  sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">CGPA</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="CGPA"
+          />
+        </FormControl>
+        <FormControl  sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Batch</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange('amount')}
+            label="Batch"
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1 }}>
+  <InputLabel id="demo-simple-select-label" >Program</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={program}
+    label="Program"
+    onChange={(e)=>setProgram(e.target.value)}
+  >
+    <MenuItem value={10}>BS</MenuItem>
+    <MenuItem value={20}>PHD</MenuItem>
+    <MenuItem value={30}>MS</MenuItem>
+  </Select>
+</FormControl>
+<FormControl sx={{ m: 1 }}>
+  <InputLabel id="demo-simple-select-label" >isEmployed</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={program}
+    label="isEmployed"
+    onChange={(e)=>setProgram(e.target.value)}
+  >
+    <MenuItem value={10}>BS</MenuItem>
+    <MenuItem value={20}>PHD</MenuItem>
+    <MenuItem value={30}>MS</MenuItem>
+  </Select>
+</FormControl>
+<FormControl sx={{ m: 1 }}>
+  <InputLabel id="demo-simple-select-label" >isStudent</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={program}
+    label="Program"
+    onChange={(e)=>setProgram(e.target.value)}
+  >
+    <MenuItem value={10}>BS</MenuItem>
+    <MenuItem value={20}>PHD</MenuItem>
+    <MenuItem value={30}>MS</MenuItem>
+  </Select>
+</FormControl>
+        
+       
+   
+       
       </div>
     </Box>
         
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose}>Submit</Button>
         </DialogActions>
+        
       </Dialog>
+
+
+
+      <Dialog
+        fullWidth={true}
+        maxWidth='md'
+        open={openFilePopup}
+        onClose={handleClose}
+      >
+        <DialogTitle>
+        <div style={{ display: 'flex' }}>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                       Add Alumni
+                    </Typography>
+                    <Button
+                        onClick={()=>{setOpenFilePopup(false)}}>
+                        <Close />
+                    </Button>
+                </div>
+        </DialogTitle>
+        <DialogContent>
+          
+          
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div>
+ 
+			<input type="file" name="file" onChange={changeHandler} />
+			{isSelected ? (
+				<div>
+					<p>Filename: {selectedFile.name}</p>
+					<p>Filetype: {selectedFile.type}</p>
+					<p>Size in bytes: {selectedFile.size}</p>
+					<p>
+						lastModifiedDate:{' '}
+						{selectedFile.lastModifiedDate.toLocaleDateString()}
+					</p>
+				</div>
+			) : (
+				<p>Select a file to Upload</p>
+			)}
+			
+		</div>
+     
+    </Box>
+        
+        </DialogContent>
+        <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleSubmission}>Submit</Button>
+        </DialogActions>
+        
+      </Dialog>
+
     </React.Fragment>
   );
 }
