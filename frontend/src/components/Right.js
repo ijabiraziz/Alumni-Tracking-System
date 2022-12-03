@@ -1,5 +1,5 @@
 import React from 'react'
-import AddAlumniCard from './Popup'
+import Popup from './Popup'
 import RecentAlumniCard from './RecentAlumniCard'
 
 function Right() {
@@ -23,7 +23,7 @@ function Right() {
     {/* End of top  */}
     <RecentAlumniCard/>
     {/* End of Recent Post */}
-   <AddAlumniCard/>
+   <Popup/>
     </div>
   )
 }

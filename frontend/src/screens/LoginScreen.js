@@ -2,46 +2,46 @@ import axios from 'axios';
 
 import '../styles/util.css'
 import '../styles/main.css'
-import React, {useState,useEffect} from 'react';
+
 import logo from '../assets/images/auth-image.png'
 
+import React, {useState,useEffect} from 'react';
+import {Form, Button,Row, Col } from 'react-bootstrap';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import {useDispatch, useSelector} from 'react-redux';
+import { login } from '../actions/UserActions'; 
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+
+
 function LoginScreen() {
-    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [department, setDepartment] = useState('')
     const [password, setPassword] = useState('')
 
-    const  submitHandler = (e) => {
-        var bodyFormData = new FormData();
-        bodyFormData.append('email', email);
-        bodyFormData.append('password',password);
+    const dispatch = useDispatch()
+    const history = useNavigate();
+    const location = useLocation();
 
+    const redirect = location.search ? location.search.split('=')[1] : '/'
 
-        e.preventDefault()
+    const userLogin = useSelector (state => state.userLogin)
+    const {error, loading, userInfo} = userLogin
 
-        const config =  {
-
-            headers :{
-                'Content-type':'multipart/form-data'
-            }
-        }
-        axios({
-            method: "post",
-            url: "http://127.0.0.1:8000/login/",
-            data: bodyFormData,
-            headers: { "Content-Type": "multipart/form-data" },
-          })
-            .then(function (response) {
-              //handle success
-              console.log(response);
-            })
-            .catch(function (response) {
-              //handle error
-              console.log(response);
-            });
-        
-      
+    useEffect (()=>{
+      if (userInfo){
+        history(redirect)
       }
+    }, [history, userInfo, redirect])
+
+
+
+
+
+    const  submitHandler = (e) => {
+        e.preventDefault()
+        dispatch(login(email,password))
+    }
+
   return (
   <div className="limiter">
     <div className="container-login100">

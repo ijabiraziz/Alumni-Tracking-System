@@ -2,7 +2,16 @@ import '../styles/util.css'
 import '../styles/main.css'
 import React, {useState,useEffect} from 'react';
 import logo from '../assets/images/auth-image.png'
-import axios from 'axios';
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+
+import {useDispatch, useSelector} from 'react-redux';
+import { register } from '../actions/UserActions'; 
+
+import { listDepartments } from '../actions/DepartmentActions'; 
+
 
 
 function RegisterScreen() {
@@ -11,41 +20,44 @@ function RegisterScreen() {
     const [department, setDepartment] = useState('')
     const [password, setPassword] = useState('')
 
+
+    const dispatch = useDispatch()
+    const history = useNavigate();
+    const location = useLocation();
+
+    const redirect = location.search ? location.search.split('=')[1] : '/'
+
+    const userRegister = useSelector (state => state.userRegister)
+    const {error, loading, userInfo} = userRegister
+
+   
+    const departmentList = useSelector(state=>state.listDepartments)
+    const {d_error, d_loading, departments} = departmentList
+
+    useEffect (()=>{
+
+        dispatch(listDepartments())
+      if (userInfo){
+        history(redirect)
+      }
+    }, [history, userInfo, redirect])
+
+
     const  submitHandler = (e) => {
-        var bodyFormData = new FormData();
-        bodyFormData.append('email', email);
-        bodyFormData.append('password',password);
 
 
         e.preventDefault()
 
-        const config =  {
-
-            headers :{
-                'Content-type':'multipart/form-data'
-            }
-        }
-        axios({
-            method: "post",
-            url: "http://127.0.0.1:8000/register/",
-            data: bodyFormData,
-            headers: { "Content-Type": "multipart/form-data" },
-          })
-            .then(function (response) {
-              //handle success
-              console.log(response);
-            })
-            .catch(function (response) {
-              //handle error
-              console.log(response);
-            });
-        
+        dispatch(register(name,department,email,password))
       
       }
 
 
   return (
   <div className="limiter">
+
+
+
     <div className="container-login100">
         <div className="wrap-login100">
             <div className="login100-pic js-tilt" data-tilt>
@@ -79,23 +91,22 @@ function RegisterScreen() {
                 </div>
 
                 <div className="wrap-input100 validate-input" >
-                    <select className="login_input input100" type="text" name="department" placeholder="Department">
-
-                        <option 
-                         value={department}
-                         onChange={(e)=> setDepartment(e.target.value)}
-                        >
-                            Computer Science</option>
-                        <option
-                         value={department}
-                         onChange={(e)=> setDepartment(e.target.value)}
-                        >Politicla Science</option>
-                        <option
-                         value={department}
-                         onChange={(e)=> setDepartment(e.target.value)}
-                        >Bio Tech</option>
+                {d_loading ? <Loader/>
+       : d_error ? <Message variant='danger'> {d_error}</Message>
+       :
+                   
+                    <select className="login_input input100" type="text" name="department" placeholder="Department"
+                    onChange={(e)=> setDepartment(e.target.value)}
+                    >
+                        
+       {departments.map(deptt =>(
+           <option key={deptt.id} 
+           value={deptt.name}
+           >                {deptt.name}
+           </option>
+       ))}
                     </select>
-
+}
 
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">

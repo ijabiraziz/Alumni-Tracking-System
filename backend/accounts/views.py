@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from accounts.models import MyUser
-from accounts.serializers import RegistrationSerializer
+from accounts.models import MyUser,Department, Alumni
+from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer
 
 
 from django.contrib.auth import authenticate, login, logout
@@ -10,6 +10,11 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated
 from .utils import get_tokens_for_user
 from .serializers import  PasswordChangeSerializer, UserUpdateSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+
 @api_view(['GET'])
 def get_routes(request):
     return Response('Base Route')
@@ -30,13 +35,15 @@ def user_detail(request,pk):
         return Response({'message':'The User is Not Available' },status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == 'GET':
-        serializer = RegistrationSerializer(user)
+        serializer = MyUserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     
 @api_view(['POST'])
 def register_user(request):
     print(request.data)
+    deptt= Department.objects.get(name=request.data['department'])
+    print(deptt)
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -53,10 +60,15 @@ def login_user(request):
     password = request.data['password']
     user = authenticate(request, email=email, password=password)
     
+    instance = MyUser.objects.filter(email=email)[0]
+    print(instance.name)
+    
+    
+
     if user is not None:
         login(request, user)
         auth_data = get_tokens_for_user(request.user)
-        return Response({'msg': 'Login Success', **auth_data}, status=status.HTTP_200_OK)
+        return Response({'msg': 'Login Success','Name': instance.name ,**auth_data}, status=status.HTTP_200_OK)
     return Response({'msg': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
     
@@ -88,6 +100,30 @@ def change_password(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
     
     
-    
 
+@api_view(['GET'])
+def list_departments(request):
+    deptt = Department.objects.all()
+    serializer = DepartmentSerializer(deptt, many=True)
+    return Response (serializer.data)
     
+@api_view(['POST'])
+def add_alumni(request):
+    data = request.data
+    alumni = Alumni.objects.create(
+        name = data['name'],
+        email = data['email'],
+        department = data['department'],
+        location = data['location'],
+        phone = data['phone'],
+        company = data['company'],
+        position = data['position'],
+        cgpa = data['cgpa'],
+        is_employed = data['is_employed'],
+        is_student = data['is_student'],
+        batch = data['batch'],
+        program = data['is_student']
+    )
+    alumni.save()
+    serializer = AlumniSerializer(alumni, many=False)    
+    return Response(serializer.data)

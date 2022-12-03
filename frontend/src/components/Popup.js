@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +9,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { Typography } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import  {TextField} from '@mui/material';
+import { listDepartments } from '../actions/DepartmentActions'; 
+
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -24,59 +25,50 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import React, {useState,useEffect} from 'react';
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import {useDispatch, useSelector} from 'react-redux';
+import { addAlumni } from '../actions/AlumniActions';
 
 
+export default function Popup() {
 
-export default function MaxWidthDialog() {
-  const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'EUR',
-      label: '€',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
-  
+  const dispatch = useDispatch()
+  const history = useNavigate();
 
-  const [currency, setCurrency] = React.useState('EUR');
 
-  const [program, setProgram] = React.useState('BS');
-  const [openFilePopup, setOpenFilePopup] = React.useState(false);
-
-  
-
-  
+  const [selectedFile, setSelectedFile] = React.useState();
+	const [isSelected, setIsSelected] = React.useState(false);
+  const [openFilePopup, setOpenFilePopup] = React.useState(false);  
   const [open, setOpen] = React.useState(false);
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [showPassword,setShowPassword] = React.useState(false);
+  const [department, setDepartment] = React.useState('');
+  const [phoneNo, setphoneNo] = React.useState('');
+  const [location, setLocation] = React.useState('');
+  const [company, setCompany] = React.useState('');
+  const [position, setPosition] = React.useState('');
+  const [cgpa, setCgpa] = React.useState('');
+  const [batch, setBatch] = React.useState('');
+  const [program, setProgram] = React.useState('');
+  const [isEmployed, setIsEmployed] = React.useState("Yes");
+  const [isStudent, setIsStudent] = React.useState("No");
 
 
-  const [values, setValues] = React.useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+  const departmentList = useSelector(state=>state.listDepartments)
+  const {d_error, d_loading, departments} = departmentList
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  useEffect (()=>{
+    dispatch(listDepartments())
+    console.log(departments)
+}, [open])
 
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
+
+
+
+
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -98,41 +90,32 @@ export default function MaxWidthDialog() {
   };
 
 
-
-  const [selectedFile, setSelectedFile] = React.useState();
-	const [isSelected, setIsSelected] = React.useState(false);
-
 	const changeHandler = (event) => {
 		setSelectedFile(event.target.files[0]);
 		setIsSelected(true);
 	};
 
 	const handleSubmission = () => {
-		const formData = new FormData();
+    dispatch(addAlumni(
+      
+      name,
+      email,
+      department,
+      location,
+      phoneNo,
+      company,
+      position,
+      cgpa,
+      isEmployed,
+      isStudent,
+      batch,
+      program
 
-		formData.append('File', selectedFile);
+      ))
+      setOpen(false);
 
-		fetch(
-			'https://freeimage.host/api/1/upload?key=<YOUR_API_KEY>',
-			{
-				method: 'POST',
-				body: formData,
-			}
-		)
-			.then((response) => response.json())
-			.then((result) => {
-				console.log('Success:', result);
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-			});
+
 	};
-
-
-
-
-
-
   return (
     <React.Fragment>
     <div className="sales-analytics">
@@ -172,15 +155,12 @@ export default function MaxWidthDialog() {
           
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <div>
-      
-      
-     
         <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount">Name</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={name}
+            onChange={(e)=>setName(e.target.value)}
             label="Name"
           />
         </FormControl>
@@ -188,8 +168,8 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Email</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
             label="Email"
           />
         </FormControl>
@@ -197,18 +177,18 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
+                  onClick={(e)=>setShowPassword(!showPassword)}
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
@@ -219,13 +199,13 @@ export default function MaxWidthDialog() {
           id="outlined-select-currency"
           select
           label="Department"
-          value={currency}
-          onChange={handleChange}
+          value={department}
+          onChange={(e)=>setDepartment(e.target.value)}
           fullWidth sx={{ m: 1 }}
         >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+          {departments.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}
             </MenuItem>
           ))}
         </TextField>
@@ -234,8 +214,8 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Phone</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={phoneNo}
+            onChange={(e)=>setphoneNo(e.target.value)}
             label="Phone"
           />
         </FormControl>
@@ -243,8 +223,8 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Location</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={location}
+            onChange={(e)=>setLocation(e.target.value)}
             label="Location"
           />
         </FormControl>
@@ -252,8 +232,8 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Company</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={company}
+            onChange={(e)=>setCompany(e.target.value)}
             label="Company"
           />
         </FormControl>
@@ -261,8 +241,10 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Position</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={position}
+            // onChange={(e)=>setPosition(e.target.value)}
+            onChange={(e)=>setPosition(e.target.value)}
+
             label="Position"
           />
         </FormControl>
@@ -275,8 +257,9 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">CGPA</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={cgpa}
+            // onChange={setCgpa((e)=>e.target.value)}
+            onChange={(e)=>setCgpa(e.target.value)}
             label="CGPA"
           />
         </FormControl>
@@ -284,8 +267,9 @@ export default function MaxWidthDialog() {
           <InputLabel htmlFor="outlined-adornment-amount">Batch</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={batch}
+            // onChange={setBatch((e)=>e.target.value)}
+            onChange={(e)=>setBatch(e.target.value)}
             label="Batch"
           />
         </FormControl>
@@ -298,9 +282,9 @@ export default function MaxWidthDialog() {
     label="Program"
     onChange={(e)=>setProgram(e.target.value)}
   >
-    <MenuItem value={10}>BS</MenuItem>
-    <MenuItem value={20}>PHD</MenuItem>
-    <MenuItem value={30}>MS</MenuItem>
+    <MenuItem value={"BS"}>BS</MenuItem>
+    <MenuItem value={"PHD"}>PHD</MenuItem>
+    <MenuItem value={"MS"}>MS</MenuItem>
   </Select>
 </FormControl>
 <FormControl sx={{ m: 1 }}>
@@ -308,13 +292,12 @@ export default function MaxWidthDialog() {
   <Select
     labelId="demo-simple-select-label"
     id="demo-simple-select"
-    value={program}
+    value={isEmployed}
     label="isEmployed"
-    onChange={(e)=>setProgram(e.target.value)}
+    onChange={(e)=>setIsEmployed (e.target.value)}
   >
-    <MenuItem value={10}>BS</MenuItem>
-    <MenuItem value={20}>PHD</MenuItem>
-    <MenuItem value={30}>MS</MenuItem>
+    <MenuItem value={"Yes"}>YES</MenuItem>
+    <MenuItem value={"No"}>No</MenuItem>
   </Select>
 </FormControl>
 <FormControl sx={{ m: 1 }}>
@@ -322,13 +305,13 @@ export default function MaxWidthDialog() {
   <Select
     labelId="demo-simple-select-label"
     id="demo-simple-select"
-    value={program}
+    value={isStudent}
     label="Program"
-    onChange={(e)=>setProgram(e.target.value)}
+    onChange={(e)=>setIsStudent(e.target.value)}
   >
-    <MenuItem value={10}>BS</MenuItem>
-    <MenuItem value={20}>PHD</MenuItem>
-    <MenuItem value={30}>MS</MenuItem>
+    <MenuItem value={"Yes"}>YES</MenuItem>
+    <MenuItem value={"No"}>No</MenuItem>
+
   </Select>
 </FormControl>
         
@@ -341,7 +324,7 @@ export default function MaxWidthDialog() {
         </DialogContent>
         <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={handleSubmission}>Submit</Button>
         </DialogActions>
         
       </Dialog>

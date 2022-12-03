@@ -50,7 +50,7 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     
     name = models.CharField(max_length=50, null=True,blank=True)
-    department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
+    department = models.CharField(max_length=50, null=True,blank=True)
     phone_number = models.CharField(max_length=20,null=True)
     avator = models.ImageField(upload_to ='uploads/',null=True)
     
@@ -102,20 +102,18 @@ class MyUser(AbstractBaseUser):
 class Alumni(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
     email = models.EmailField()
-    department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True)
+    department = models.CharField(max_length=200, null=True,blank=True)
     phone = models.CharField(max_length=20, null=True,blank=True)
     location = models.CharField(max_length=200)
     company= models.CharField(max_length=200)
     position = models.CharField(max_length=200)
     
-    
-    cgpa = models.FloatField()
-    is_employed=models.BooleanField(default=False)
-    is_student=models.BooleanField(default=False)
-    
-    batch = models.IntegerField()
-    program = models.ForeignKey('accounts.Program',on_delete=models.CASCADE)
-    avator = models.ImageField()
+    cgpa = models.CharField(max_length=200)
+    is_employed=models.CharField(max_length=200)
+    is_student=models.CharField(max_length=200)
+
+    batch = models.CharField(max_length=200)
+    program = models.CharField(max_length=200)
     createdAt =models.DateTimeField(auto_now_add=True)
     
     
