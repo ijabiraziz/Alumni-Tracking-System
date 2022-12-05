@@ -13,6 +13,12 @@ from .serializers import  PasswordChangeSerializer, UserUpdateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from .models import BulkAlumni
+from .serializers import BulkAlumniSerializer
+from rest_framework import permissions
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import viewsets
+
 
 
 @api_view(['GET'])
@@ -127,3 +133,18 @@ def add_alumni(request):
     alumni.save()
     serializer = AlumniSerializer(alumni, many=False)    
     return Response(serializer.data)
+
+@api_view(['POST'])
+def add_bulk_alumni(request):
+
+    
+    parser_classes = (MultiPartParser, FormParser)
+
+    serializer = BulkAlumniSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+

@@ -28,14 +28,13 @@ import Select from '@mui/material/Select';
 import React, {useState,useEffect} from 'react';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
-import { addAlumni } from '../actions/AlumniActions';
+import { addAlumni, add_bulk_Alumni } from '../actions/AlumniActions';
 
 
 export default function Popup() {
 
   const dispatch = useDispatch()
   const history = useNavigate();
-
 
   const [selectedFile, setSelectedFile] = React.useState();
 	const [isSelected, setIsSelected] = React.useState(false);
@@ -65,11 +64,6 @@ export default function Popup() {
     console.log(departments)
 }, [open])
 
-
-
-
-
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -89,15 +83,15 @@ export default function Popup() {
     setOpen(false);
   };
 
-
 	const changeHandler = (event) => {
-		setSelectedFile(event.target.files[0]);
 		setIsSelected(true);
-	};
+		setSelectedFile(event.target.files[0]);    
+    var file = event.target.files[0]
+    console.log(file.name)
 
+	};
 	const handleSubmission = () => {
     dispatch(addAlumni(
-      
       name,
       email,
       department,
@@ -110,12 +104,17 @@ export default function Popup() {
       isStudent,
       batch,
       program
-
       ))
       setOpen(false);
 
 
 	};
+
+  const handleFSubmission = () => {
+    console.log(selectedFile)
+    dispatch(add_bulk_Alumni(selectedFile.name, "", selectedFile))
+  }
+
   return (
     <React.Fragment>
     <div className="sales-analytics">
@@ -328,9 +327,6 @@ export default function Popup() {
         </DialogActions>
         
       </Dialog>
-
-
-
       <Dialog
         fullWidth={true}
         maxWidth='md'
@@ -354,7 +350,7 @@ export default function Popup() {
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <div>
  
-			<input type="file" name="file" onChange={changeHandler} />
+      <input type="file" name="file_url" onChange={changeHandler} />
 			{isSelected ? (
 				<div>
 					<p>Filename: {selectedFile.name}</p>
@@ -375,8 +371,8 @@ export default function Popup() {
         
         </DialogContent>
         <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleSubmission}>Submit</Button>
+        <Button onClick={handleClickFClose}>Close</Button>
+          <Button onClick={handleFSubmission}>Submit</Button>
         </DialogActions>
         
       </Dialog>

@@ -2,6 +2,11 @@ import {
     ALUMNI_FAIL,
     ALUMNI_REQUEST,
     ALUMNI_SUCCESS,
+
+    BULK_ALUMNI_FAIL,
+    BULK_ALUMNI_REQUEST,
+    BULK_ALUMNI_SUCCESS,
+
 } from '../constants/AlumniConstants'
 import axios from 'axios';
 
@@ -64,3 +69,44 @@ export const addAlumni = (
             });
 
 }
+
+
+export const add_bulk_Alumni = (
+    title,
+    description,
+    file
+    ) => async (dispatch)=>{
+    var bodyFormData = new FormData();
+    bodyFormData.append('title', title);
+    bodyFormData.append('description',description);
+    bodyFormData.append('file_url', file);
+
+        dispatch({
+            type: BULK_ALUMNI_REQUEST
+        })
+
+        axios({
+            method: "post",
+            url: "http://127.0.0.1:8000/add-bulk-alumni/",
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+            .then(function (response) {
+                dispatch({ 
+                    type:   BULK_ALUMNI_SUCCESS,
+                    payload:response
+                })
+                   
+            })
+            .catch(function (response) {
+              //handle error
+              dispatch({
+                type:BULK_ALUMNI_FAIL,
+                payload:response.response && response.response.data.detail
+                ? response.response.data.detail
+                :response.message,
+            })
+            });
+
+}
+

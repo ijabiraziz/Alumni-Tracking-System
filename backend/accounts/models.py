@@ -6,6 +6,9 @@ from django.contrib.auth.models import (
 )
 
 
+def upload_to(instance, filename):
+    return 'bulk_alumni/{filename}'.format(filename=filename)
+
 class MyUserManager(BaseUserManager):
     def create_user(self, email,password=None):
         if not email:
@@ -138,6 +141,17 @@ class Program(models.Model):
     
     def __str__(self) -> str:
         return self.name
+    
+class BulkAlumni(models.Model):
+    # creator = models.ForeignKey(
+    #     MyUser, on_delete=models.CASCADE, related_name="listings")
+    title = models.CharField(
+        max_length=80, blank=False, null=False)
+    description = models.TextField (max_length=80, blank=True, null=True)
+    file_url = models.FileField(upload_to=upload_to, blank=False, null=False)
+    
+    def __str__(self) -> str:
+        return self.title
     
     
     

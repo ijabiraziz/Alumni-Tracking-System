@@ -5,12 +5,13 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 // import { cartReducer } from './reducers/cartReducers'
 import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegisterReducer } from './reducers/UserReducers'
 import {departmentListReducer} from './reducers/DepartmentReducers'
-import {alumniReducer} from './reducers/AlumniReducers'
+import {alumniReducer, bulk_alumniReducer} from './reducers/AlumniReducers'
 
 // import { orderCreateReducer, orderDetailsReducer } from './reducers/orderReucers'
 
 
 const reducer = combineReducers({
+    add_bulk_Alumni:bulk_alumniReducer,
     addAlumni:alumniReducer,
     userLogin: userLoginReducer,
     userRegister : userRegisterReducer,

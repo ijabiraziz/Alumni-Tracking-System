@@ -1,6 +1,6 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import MyUser,Alumni,Report,Department
+from .models import MyUser,Alumni,Report,Department,BulkAlumni
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,6 +63,12 @@ class ReportSerializer(serializers.ModelSerializer):
         model = Report
         fields = '__all__'
     
+    
+class BulkAlumniSerializer(serializers.ModelSerializer):
+    file_url = serializers.FileField(required=False)
+    class Meta:
+        model = BulkAlumni
+        fields = '__all__'
 
 
     

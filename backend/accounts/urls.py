@@ -3,6 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from accounts import views
 from rest_framework_simplejwt import views as jwt_views
 
+
 urlpatterns =[
     path('', views.get_routes, name='base_route'),
     path('register/', views.register_user, name='register-user'),
@@ -17,4 +18,6 @@ urlpatterns =[
     
     path('user-detail/<int:pk>/', views.user_detail,name='user-detail'),
     path('add-alumni/', views.add_alumni, name='add-alumni'),
+    path('add-bulk-alumni/', views.add_bulk_alumni , name='add-bulk-alumni'),
+
 ]
