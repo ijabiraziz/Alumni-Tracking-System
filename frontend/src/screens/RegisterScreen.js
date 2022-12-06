@@ -3,15 +3,11 @@ import '../styles/main.css'
 import React, {useState,useEffect} from 'react';
 import logo from '../assets/images/auth-image.png'
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-
 import {useDispatch, useSelector} from 'react-redux';
 import { register } from '../actions/UserActions'; 
-
 import { listDepartments } from '../actions/DepartmentActions'; 
-
 
 
 function RegisterScreen() {
@@ -29,8 +25,6 @@ function RegisterScreen() {
 
     const userRegister = useSelector (state => state.userRegister)
     const {error, loading, userInfo} = userRegister
-
-   
     const departmentList = useSelector(state=>state.listDepartments)
     const {d_error, d_loading, departments} = departmentList
 
@@ -132,10 +126,11 @@ function RegisterScreen() {
                 </div>
 
                 <div className="text-center p-t-60">
-                    <a className="txt2" href="#">
-                        Already have an Account? Login Here
+                Already have an Account?
+                    <Link className="txt2" to="/login">
+                         Login Here
                         <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-                    </a>
+                    </Link>
                 </div>
             </form>
         </div>

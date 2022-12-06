@@ -1,39 +1,47 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { FormControl, InputLabel, OutlinedInput} from '@mui/material';
+import { Button } from '@mui/material';
+import Box from '@mui/material/Box';
 
 
-const columns = [
+const mycolumns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
+  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'location', headerName: 'Location', width: 170 },
   {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
+    field: 'department',
+    headerName: 'Department',
+    type: 'text',
+    width: 150,
   },
   {
-    field: 'fullName',
-    headerName: 'Full name',
+    field: 'phone',
+    headerName: 'Phone',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 140,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
+  }
 ];
 
+
 const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  { id: 1, name: 'Snow', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 2, name: 'Lannister', location:'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 3, name: 'Lannister', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 4, name: 'Stark', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 5, name: 'Targaryen', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 6, name: 'Melisandre', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 7, name: 'Clifford', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 8, name: 'Frances', location:'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
+  { id: 9, name: 'Roxie', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
 ];
 
 export default function Search() {
@@ -44,6 +52,11 @@ export default function Search() {
     weightRange: '',
     showPassword: false,
   });
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+   
+  }
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -52,7 +65,7 @@ export default function Search() {
     <>
      <div style={{ height: 400, width: '100%' }}>
      <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Name</InputLabel>
+          <InputLabel htmlFor="outlined-adornment-amount">Search </InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
             value={values.amount}
@@ -62,12 +75,27 @@ export default function Search() {
         </FormControl>
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={mycolumns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
       />
+
+<Box
+  display="flex"
+  justifyContent="center"
+  alignItems="center"
+
+>
+<Button variant="outlined" size="large"  onClick={submitHandler} >
+          Generate Report
+        </Button>
+</Box>
     </div>
+
+ 
+
+
     </>
    
   );

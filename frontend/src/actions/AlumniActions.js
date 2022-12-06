@@ -7,6 +7,22 @@ import {
     BULK_ALUMNI_REQUEST,
     BULK_ALUMNI_SUCCESS,
 
+    LIST_ALL_ALUMNI_FAIL,
+    LIST_ALL_ALUMNI_REQUEST,
+    LIST_ALL_ALUMNI_SUCCESS,
+
+    LIST_BS_ALUMNI_FAIL,
+    LIST_BS_ALUMNI_REQUEST,
+    LIST_BS_ALUMNI_SUCCESS,
+
+    LIST_MS_ALUMNI_FAIL,
+    LIST_MS_ALUMNI_REQUEST,
+    LIST_MS_ALUMNI_SUCCESS,
+
+    LIST_PHD_ALUMNI_FAIL,
+    LIST_PHD_ALUMNI_REQUEST,
+    LIST_PHD_ALUMNI_SUCCESS,
+
 } from '../constants/AlumniConstants'
 import axios from 'axios';
 
@@ -108,5 +124,83 @@ export const add_bulk_Alumni = (
             })
             });
 
+}
+
+
+export const listAllAlumnis = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_ALL_ALUMNI_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-alumnis/')
+        dispatch({
+            type:LIST_ALL_ALUMNI_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_ALL_ALUMNI_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
+}
+
+
+export const listBsAlumnis = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_BS_ALUMNI_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-bs-alumnis/')
+        dispatch({
+            type:LIST_BS_ALUMNI_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_BS_ALUMNI_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
+}
+
+export const listMsAlumnis = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_MS_ALUMNI_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-ms-alumnis/')
+        dispatch({
+            type:LIST_MS_ALUMNI_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_MS_ALUMNI_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
+}
+
+export const listPhdAlumnis = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_PHD_ALUMNI_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-phd-alumnis/')
+        dispatch({
+            type:LIST_PHD_ALUMNI_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_PHD_ALUMNI_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
 }
 

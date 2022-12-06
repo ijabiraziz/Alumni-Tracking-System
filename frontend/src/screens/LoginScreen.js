@@ -93,10 +93,10 @@ function LoginScreen() {
                 </div>
 
                 <div className="text-center p-t-136">
-                    <a className="txt2" href="#">
+                    <Link className="txt2" to="/register">
                         Create your Account
                         <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-                    </a>
+                    </Link>
                 </div>
             </form>
         </div>

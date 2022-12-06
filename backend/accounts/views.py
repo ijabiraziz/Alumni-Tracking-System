@@ -197,5 +197,28 @@ def list_alumnis(request):
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
 
+
+@api_view(['GET'])
+def list_bs_alumnis(request):
+    alumni =reversed( Alumni.objects.filter(program="BS"))
+    serializer = AlumniSerializer(alumni, many=True)
+    return Response (serializer.data)
+
+    
+
+@api_view(['GET'])
+def list_ms_alumnis(request):
+    alumni =reversed( Alumni.objects.filter(program="MS"))
+    serializer = AlumniSerializer(alumni, many=True)
+    return Response (serializer.data)
+
+    
+
+@api_view(['GET'])
+def list_phd_alumnis(request):
+    alumni =reversed( Alumni.objects.filter(program="PHD"))
+    serializer = AlumniSerializer(alumni, many=True)
+    return Response (serializer.data)
+
     
 

@@ -6,7 +6,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegisterReducer } from './reducers/UserReducers'
 import {departmentListReducer} from './reducers/DepartmentReducers'
 import {DashboardReducer,recentAlumniListReducer} from './reducers/DashboardReducers'
-import {alumniReducer, bulk_alumniReducer} from './reducers/AlumniReducers'
+import {alumniReducer, bulk_alumniReducer, ListAllAlumniReducer, ListBsAlumniReducer, ListMsAlumniReducer, ListPhdAlumniReducer} from './reducers/AlumniReducers'
 
 
 
@@ -23,6 +23,11 @@ const reducer = combineReducers({
     listDepartments:departmentListReducer,
     getDashboardstats:DashboardReducer,
     listRecentAlumnis:recentAlumniListReducer,
+    listAllAlumnis: ListAllAlumniReducer,
+    listBsAlumnis: ListBsAlumniReducer,
+    listMsAlumnis: ListMsAlumniReducer,
+    listPhdAlumnis:ListPhdAlumniReducer,
+    
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')?

@@ -23,6 +23,10 @@ urlpatterns =[
     
     path('recent_alumnis/', views.recent_alumnis , name='recent_alumnis'),
     path('list-alumnis/', views.list_alumnis , name='list-alumnis'),
+     path('list-bs-alumnis/', views.list_bs_alumnis , name='list-bs-alumnis'),
+     path('list-ms-alumnis/', views.list_ms_alumnis , name='list-ms-alumnis'),
+     path('list-phd-alumnis/', views.list_phd_alumnis , name='list-phd-alumnis'),
+     
     
 
 ]
