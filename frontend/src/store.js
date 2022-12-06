@@ -5,7 +5,10 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 // import { cartReducer } from './reducers/cartReducers'
 import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegisterReducer } from './reducers/UserReducers'
 import {departmentListReducer} from './reducers/DepartmentReducers'
+import {DashboardReducer,recentAlumniListReducer} from './reducers/DashboardReducers'
 import {alumniReducer, bulk_alumniReducer} from './reducers/AlumniReducers'
+
+
 
 // import { orderCreateReducer, orderDetailsReducer } from './reducers/orderReucers'
 
@@ -18,6 +21,8 @@ const reducer = combineReducers({
     userDetails : userDetailsReducer,
     userUpdateProfile : userUpdateProfileReducer,
     listDepartments:departmentListReducer,
+    getDashboardstats:DashboardReducer,
+    listRecentAlumnis:recentAlumniListReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')?

@@ -2,8 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from accounts.models import MyUser,Department, Alumni
-from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer
-
+from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -19,7 +18,6 @@ from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
 
-from .utils import xlxs_to_list_dict
 
 
 @api_view(['GET'])
@@ -176,6 +174,28 @@ def add_bulk_alumni(request):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+def dashboard_stats(request):
+    alumni = Alumni.objects.all()
+    serializer = DashboardStatsSerializer(alumni)
+    return Response (serializer.data)
+    
+
+@api_view(['GET'])
+def recent_alumnis(request):
+    alumni =reversed( Alumni.objects.all())
+    l_alumni= list(alumni)[:5]
+    serializer = AlumniSerializer(l_alumni, many=True)
+    return Response (serializer.data)
+
+@api_view(['GET'])
+def list_alumnis(request):
+    alumni =reversed( Alumni.objects.all())
+    serializer = AlumniSerializer(alumni, many=True)
+    return Response (serializer.data)
 
     
 

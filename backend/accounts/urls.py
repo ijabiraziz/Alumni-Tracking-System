@@ -19,5 +19,10 @@ urlpatterns =[
     path('user-detail/<int:pk>/', views.user_detail,name='user-detail'),
     path('add-alumni/', views.add_alumni, name='add-alumni'),
     path('add-bulk-alumni/', views.add_bulk_alumni , name='add-bulk-alumni'),
+    path('dashboard-stats/', views.dashboard_stats , name='dashboard_stats'),
+    
+    path('recent_alumnis/', views.recent_alumnis , name='recent_alumnis'),
+    path('list-alumnis/', views.list_alumnis , name='list-alumnis'),
+    
 
 ]

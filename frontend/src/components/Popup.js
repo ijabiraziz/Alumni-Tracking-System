@@ -61,7 +61,7 @@ export default function Popup() {
 
   useEffect (()=>{
     dispatch(listDepartments())
-    console.log(departments)
+  
 }, [open])
 
   const handleMouseDownPassword = (event) => {

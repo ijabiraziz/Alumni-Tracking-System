@@ -71,4 +71,23 @@ class BulkAlumniSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DashboardStatsSerializer(serializers.ModelSerializer):
+    total_alumnis = serializers.SerializerMethodField(read_only=True)
+    employed_alumnis = serializers.SerializerMethodField(read_only=True)
+    student_alumni = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Alumni
+        fields = ['total_alumnis', 'employed_alumnis', 'student_alumni']
+
+    def get_total_alumnis(self, obj):
+        total = Alumni.objects.count()
+        return total
+
+    def get_employed_alumnis(self, obj):
+        emp_alum = Alumni.objects.filter(is_employed="Yes").count()
+        return emp_alum
     
+    def get_student_alumni(self, obj):
+        std_alum = Alumni.objects.filter(is_student="Yes").count()
+        return std_alum

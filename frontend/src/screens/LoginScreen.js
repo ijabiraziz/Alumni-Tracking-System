@@ -18,7 +18,7 @@ function LoginScreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const history = useNavigate();
     const location = useLocation();
 

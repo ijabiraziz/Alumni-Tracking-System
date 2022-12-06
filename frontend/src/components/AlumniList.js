@@ -121,11 +121,11 @@ Row.propTypes = {
 };
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
+  createData('Hazrat Ali', 159, 6.0, 24, 4.0, 3.99),
+  createData('Jaabir Aziz', 237, 9.0, 37, 4.3, 4.99),
+  createData('Muhammad Hanif', 262, 16.0, 24, 6.0, 3.79),
+  createData('Umar Zada', 305, 3.7, 67, 4.3, 2.5),
+  createData('Zohaib Ali', 356, 16.0, 49, 3.9, 1.5),
 ];
 
 export default function AlumniList({header}) {
@@ -137,11 +137,11 @@ export default function AlumniList({header}) {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Is Employed</TableCell>
+            <TableCell align="right">Is Student</TableCell>
+            <TableCell align="right">CGPA</TableCell>
+            <TableCell align="right">Batch</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
