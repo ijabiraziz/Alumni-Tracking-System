@@ -19,6 +19,7 @@ from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
 
+from .utils import xlxs_to_list_dict
 
 
 @api_view(['GET'])
@@ -128,7 +129,7 @@ def add_alumni(request):
         is_employed = data['is_employed'],
         is_student = data['is_student'],
         batch = data['batch'],
-        program = data['is_student']
+        program = data['program']
     )
     alumni.save()
     serializer = AlumniSerializer(alumni, many=False)    
@@ -143,6 +144,36 @@ def add_bulk_alumni(request):
     serializer = BulkAlumniSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        
+        # parse it 
+        import pandas as pd
+        from pathlib import Path
+        
+        
+        pathf= r'C:\Users\Ali-Pc\Desktop\Git\Alumni-Tracking-System\mediafiles\bulk_alumni\bulk_1PAapWE.xlsx'
+        
+        pathe = Path(pathf)
+        print(pathe)
+        df = pd.read_excel(pathe)
+        d=df.T.to_dict().values()
+        alumni_list=list(d)
+        for alumni in alumni_list:      
+            alumni_obj = Alumni.objects.create(      
+            name = alumni['name'],
+            email = alumni['email'],
+            department = alumni['department'],
+            location = alumni['location'],
+            phone = alumni['phone'],
+            company = alumni['company'],
+            position = alumni['position'],
+            cgpa = alumni['cgpa'],
+            is_employed = alumni['is_employed'],
+            is_student = alumni['is_student'],
+            batch = alumni['batch'],
+            program = alumni['program']
+        )
+            alumni_obj.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

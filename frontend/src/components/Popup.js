@@ -113,6 +113,8 @@ export default function Popup() {
   const handleFSubmission = () => {
     console.log(selectedFile)
     dispatch(add_bulk_Alumni(selectedFile.name, "", selectedFile))
+    setOpenFilePopup(false);
+    
   }
 
   return (
