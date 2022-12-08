@@ -9,6 +9,7 @@ import {getDashboardstats} from '../actions/DashboardActions'
 import Loader from './Loader';
 import { getUserDetails } from '../actions/UserActions';
 
+import { listAllAlumnis } from '../actions/AlumniActions';
 
 function Main({header}) {
 
@@ -27,6 +28,7 @@ function Main({header}) {
 
   useEffect (()=>{
     dispatch(getDashboardstats());
+    dispatch(listAllAlumnis());
     if (userInfo){
       const token = userInfo.data.access
       dispatch(getUserDetails(token))

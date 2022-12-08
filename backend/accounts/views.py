@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from accounts.models import MyUser,Department, Alumni
-from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer
+from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer,ReportSerializer
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,13 +12,16 @@ from .serializers import  PasswordChangeSerializer, UserUpdateSerializer,UserDet
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import BulkAlumni
+from .models import BulkAlumni, Report
 from .serializers import BulkAlumniSerializer
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets
 
+from pathlib import Path
+from django.core.files import File
 
+from .utils import get_random_string
 
 @api_view(['GET'])
 def get_routes(request):
@@ -85,13 +88,12 @@ def logout_user(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_user(request,pk):
-    instance = MyUser.objects.get(pk=pk)
-    instance.name = request.data.get("name")
-    instance.save()
-    serializer = UserUpdateSerializer(instance, data=request.data)
-    serializer.is_valid(raise_exception=True)
-    MyUser().perform_update(serializer)
+def update_user(request):
+    user = request.user
+    serializer = UserUpdateSerializer(user, many=False)
+    user.name = request.data.get("name")
+    user.email = request.data.get("email")
+    user.save()
     return Response(serializer.data)
 
 
@@ -105,14 +107,18 @@ def getUserProfile(requests):
 
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
     serializer = PasswordChangeSerializer(context={'request': request}, data=request.data)
     serializer.is_valid(raise_exception=True) #Another way to write is as in Line 17
     request.user.set_password(serializer.validated_data['new_password'])
-    request.user.save()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    try:        
+        request.user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except :
+        message ={'detail': 'unable'}
+        return Response(message,status=status.HTTP_400_BAD_REQUEST)
     
     
 
@@ -232,3 +238,41 @@ def list_phd_alumnis(request):
 
     
 
+@api_view(['POST'])
+def generate_report(request):
+    data = request.data
+    search_list = data['search_list']
+    name=data['name']
+    s_list= search_list.split(',')
+    org_l= []
+    for e in s_list:
+        r = int(e)
+        org_l.append(r)
+    print( org_l)
+    d_list=[]
+    for pk in org_l:
+        alumni=Alumni.objects.get(pk=pk)
+        serializer = AlumniSerializer(alumni, many=False)  
+        d_list.append(dict(serializer.data))
+    import pandas as pd 
+    df=pd.DataFrame(d_list)
+    file_path = f'../mediafiles/reports/{get_random_string()}.csv'
+    df.to_csv(file_path)
+    path = Path(file_path)
+    
+    # report = ''
+    report_inst=Report.objects.create(
+        name=name,
+        entries=len(org_l)
+    )
+    with path.open(mode='rb') as f:
+        report_inst.report = File(f, name=path.name)
+        report_inst.save()        
+    return Response ( status=status.HTTP_200_OK)
+    
+        
+@api_view(['GET'])
+def list_reports(request):
+    reports =Report.objects.all()
+    serializer =ReportSerializer(reports, many=True)
+    return Response (serializer.data)

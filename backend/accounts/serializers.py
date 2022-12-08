@@ -59,17 +59,19 @@ class AlumniSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class ReportSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Report
         fields = '__all__'
-    
+        
+
     
 class BulkAlumniSerializer(serializers.ModelSerializer):
     file_url = serializers.FileField(required=False)
     class Meta:
         model = BulkAlumni
         fields = '__all__'
-
+        
 
 class DashboardStatsSerializer(serializers.ModelSerializer):
     total_alumnis = serializers.SerializerMethodField(read_only=True)

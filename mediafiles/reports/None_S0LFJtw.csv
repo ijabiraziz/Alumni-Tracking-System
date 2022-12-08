@@ -1,0 +1,6 @@
+,id,name,email,department,phone,location,company,position,cgpa,is_employed,is_student,batch,program,createdAt
+0,57,Wadood,ali@2312.com,Political Science,+923159675198,"Peshawar, Pakistan",Lyftron Data,Cloud Engineer,3.3,No,Yes,21,PHD,2022-12-06T22:25:42.999201Z
+1,50,Azmat,twitter@gmail.com,Computer Science,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,21,BS,2022-12-06T15:21:41.807980Z
+2,45,Umar,ad@gmail.com,Computer Science,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,21,BS,2022-12-06T00:49:24.639654Z
+3,46,Hamza,twitter@gmail.com,Computer Science,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,21,MS,2022-12-06T00:49:24.649648Z
+4,49,jabir,ad@gmail.com,Computer Science,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,21,BS,2022-12-06T15:21:41.794987Z

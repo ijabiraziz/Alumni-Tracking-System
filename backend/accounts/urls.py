@@ -10,7 +10,7 @@ urlpatterns =[
     path('login/', views.login_user, name='login-user'),
     path('logout/', views.logout_user, name='logout'),
     path('change-password/', views.change_password, name='change-password'),
-    path('update-user/<int:pk>/', views.update_user, name='update-user'),
+    path('update-user/', views.update_user, name='update-user'),
     path('refresh-token/', jwt_views.TokenRefreshView.as_view(), name='refresh-token'),
     path('list-departments/', views.list_departments, name='list_departments'),
     
@@ -27,10 +27,8 @@ urlpatterns =[
      path('list-ms-alumnis/', views.list_ms_alumnis , name='list-ms-alumnis'),
      path('list-phd-alumnis/', views.list_phd_alumnis , name='list-phd-alumnis'),
      path('user-profile/', views.getUserProfile , name='user-profile'),
+     path('generate-report/', views.generate_report , name='generate-report'),
+     path('list-reports/', views.list_reports , name='list-reports'),
      
-     
-     
-     
-    
 
 ]

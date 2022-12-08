@@ -128,7 +128,8 @@ class Alumni(models.Model):
 class Report(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
     createdAt =models.DateTimeField(auto_now_add=True)
-    report = models.FileField(upload_to ='uploads/')
+    report = models.FileField(upload_to ='reports/', blank=True, null=True)
+    entries = models.IntegerField(blank=True, null=True)
     
 
     

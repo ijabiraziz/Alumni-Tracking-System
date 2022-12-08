@@ -1,5 +1,8 @@
 import pandas as pd
 from rest_framework_simplejwt.tokens import RefreshToken
+import random
+import string
+
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -17,5 +20,10 @@ def xlxs_to_list_dict(file_path):
     alumni_list=list(d)
     return alumni_list
 
+def get_random_string():
+    # With combination of lower and upper case
+    result_str = ''.join(random.choice(string.ascii_letters) for i in range(30))
+    # print random string
+    print(result_str)
 
 

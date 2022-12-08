@@ -1,8 +1,14 @@
-import * as React from 'react';
+
 import { DataGrid } from '@mui/x-data-grid';
 import { FormControl, InputLabel, OutlinedInput} from '@mui/material';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
+import {listAllAlumnis} from '../actions/AlumniActions'
+import React, {useState,useEffect} from 'react';
+import { generateReport } from '../actions/ReportActions';
+import {useDispatch, useSelector} from 'react-redux';
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+
 
 
 const mycolumns = [
@@ -31,35 +37,62 @@ const mycolumns = [
   }
 ];
 
+function createData(id, name, location, department,phone, email) {
+  const row= {
+     id: id, 
+     name: name,
+      location: location, 
+      department: department,
+      phone:phone, 
+      email:email 
+    }
+  return row
+}
 
-const rows = [
-  { id: 1, name: 'Snow', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 2, name: 'Lannister', location:'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 3, name: 'Lannister', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 4, name: 'Stark', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 5, name: 'Targaryen', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 6, name: 'Melisandre', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 7, name: 'Clifford', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 8, name: 'Frances', location:'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-  { id: 9, name: 'Roxie', location: 'Peshawar, Pakistan', department: "Computer Science",phone:"+923159675198", email:"ali@123.com" },
-];
+
 
 export default function Search() {
-  const [values, setValues] = React.useState({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
-  });
+  const [searchValue, setSearchValue] = React.useState('')
+  const [selectedAlumnis, setSelectedAlumnis] = React.useState([])
+
+ 
+
+
+ 
+
+  var al_row = []
+
+  const dispatch = useDispatch()
+  const history = useNavigate();
+  const location = useLocation();
+
+  const all_alumnis_s = useSelector (state => state.listAllAlumnis)
+  const {error, loading, all_alumni} = all_alumnis_s
+
+
+
+  const all=all_alumnis_s.all_alumni
+    for (let i = 0; i < all.length; i++) {
+      const row = createData(all[i].id, all[i].name, all[i].location, all[i].department,all[i].phone, all[i].email)
+      al_row.push(row)
+    }
+
+
+
+  useEffect (()=>{
+    // dispatch(listAllAlumnis());
+
+ console.log(selectedAlumnis)
+  
+  }, [selectedAlumnis])
 
   const submitHandler = (e) => {
     e.preventDefault()
+    dispatch(generateReport("Sample name",selectedAlumnis.toString()))
    
   }
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+
+
   return (
     
     <>
@@ -68,18 +101,22 @@ export default function Search() {
           <InputLabel htmlFor="outlined-adornment-amount">Search </InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            value={values.amount}
-            onChange={handleChange('amount')}
+            value={searchValue}
+            onChange={(e)=>setSearchValue(e.target.value)}
             label="Name"
           />
         </FormControl>
+        {al_row?
       <DataGrid
-        rows={rows}
+        rows={al_row}
         columns={mycolumns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
-      />
+        onSelectionModelChange={(e)=>setSelectedAlumnis(e)}
+      />:
+      console.log(al_row)
+        }
 
 <Box
   display="flex"
@@ -92,10 +129,6 @@ export default function Search() {
         </Button>
 </Box>
     </div>
-
- 
-
-
     </>
    
   );

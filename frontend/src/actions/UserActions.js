@@ -20,6 +20,10 @@ import {
     USER_UPDATE_PROFILE_FAIL,
     USER_UPDATE_PROFILE_RESET,
 
+    USER_UPDATE_PASSWORD_REQUEST,
+    USER_UPDATE_PASSWORD_SUCCESS,
+    USER_UPDATE_PASSWORD_FAIL,
+
 } from  '../constants/UserConstants';
 import axios  from 'axios';
 
@@ -113,27 +117,24 @@ export const getUserDetails = (token) => async(dispatch) =>{
 }
 
 
-export const updateUserProfile = (user) => async (dispatch,  getState)=>{
+export const updateUserProfile = (name, email, token) => async (dispatch)=>{
     try{
 
         dispatch({
             type: USER_UPDATE_PROFILE_REQUEST
         })
 
-        const {
-            userLogin : {userInfo}, 
-        }  = getState()
-
+   
         const config =  {
 
             headers :{
                 'Content-type':'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${token}`
             }
         }
         const {data} = await axios.put(
-            `/api/users/profile/update/`,
-            user,
+            `http://127.0.0.1:8000/update-user/`,
+            {'name':name, 'email':email},
             config
         )
         dispatch({ 
@@ -162,9 +163,6 @@ export const updateUserProfile = (user) => async (dispatch,  getState)=>{
 
 
 export const register = (name,department, email , password) => async (dispatch)=>{
-
-
-    
     var bodyFormData = new FormData();
     bodyFormData.append('name', name);
     bodyFormData.append('department',department);
@@ -232,6 +230,56 @@ export const register = (name,department, email , password) => async (dispatch)=
               console.log(response);
             });
 
+}
+
+
+
+export const changePassword = (currentPassword , newPassword, token) => async (dispatch)=>{
+
+    var bodyFormData = new FormData();
+    bodyFormData.append('current_password', currentPassword);
+    bodyFormData.append('new_password',newPassword);
+    
+
+  
+    try{
+
+        dispatch({
+            type: USER_UPDATE_PASSWORD_REQUEST
+        })
+
+        const config =  {
+
+            headers :{
+                'Content-Type': 'application/json',
+                Authorization : `Bearer ${token}`
+            }
+        }
+
+        const {data} =axios({
+            method: "put",
+            url: "http://127.0.0.1:8000/change-password/",
+            data: bodyFormData,
+            headers: config,
+          })
+
+        dispatch({ 
+            type: USER_UPDATE_PASSWORD_SUCCESS,
+            payload:data
+        })
+
+
+    }
+    catch(error){
+
+        dispatch({
+            type:USER_UPDATE_PASSWORD_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+
+    }
 }
 
 

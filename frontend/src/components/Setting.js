@@ -3,7 +3,7 @@ import React, {useState,useEffect} from 'react';
 import {Form, Row, Col } from 'react-bootstrap';
 
 import {useDispatch, useSelector} from 'react-redux';
-import { getUserDetails, updateUserProfile  } from '../actions/UserActions'; 
+import { changePassword, getUserDetails, updateUserProfile  } from '../actions/UserActions'; 
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {USER_UPDATE_PROFILE_RESET} from '../constants/UserConstants'
 
@@ -17,7 +17,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import MenuItem from '@mui/material/MenuItem';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -25,12 +24,12 @@ import Box from '@mui/material/Box';
 function Setting() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [message, setMessage] = useState('')
+    const [token, setToken] = useState('')
+    const [currentPassword, setCurrentPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
     const [showPassword,setShowPassword] = React.useState(false);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const history = useNavigate();
     const location = useLocation();
 
@@ -52,6 +51,7 @@ function Setting() {
        
             setName(user.name)
             setEmail(user.email)
+            setToken(userInfo.data.access)
         
       }
     }, [dispatch, history, userInfo, user, success])
@@ -59,15 +59,11 @@ function Setting() {
 
     const submitHandler = (e) => {
       e.preventDefault()
-      if (password != confirmPassword){
-        setMessage('Password do not match')
-      }else {
-      dispatch(updateUserProfile({
-        'id':user._id,
-        'name': name,
-        'email': email,
-        'password': password
-    }))}
+      console.log(currentPassword)
+      console.log(newPassword)
+      console.log(token)
+      dispatch(changePassword(currentPassword, newPassword, token))
+      dispatch(updateUserProfile(name, email, token))
     }
 
 
@@ -104,12 +100,12 @@ function Setting() {
 
           <Form.Group controlId = 'password'>
           <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <InputLabel htmlFor="outlined-adornment-password">Current Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            value={currentPassword}
+            onChange={(e)=>setCurrentPassword(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -131,12 +127,12 @@ function Setting() {
         
 
 <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Confirm Password</InputLabel>
+          <InputLabel htmlFor="outlined-adornment-password">New Password</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
-            value={confirmPassword}
-            onChange={(e)=> setConfirmPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e)=> setNewPassword(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,8 +8,13 @@ import Paper from '@mui/material/Paper';
 import DatePlaceHolder from './DatePlaceHolder';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+import React, {useState,useEffect} from 'react';
+import { listReports } from '../actions/ReportActions';
+import {useDispatch, useSelector} from 'react-redux';
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+
+function createData(name, entries, date, url) {
+  return {name, entries, date, url };
 }
 
 const rows = [
@@ -18,8 +22,35 @@ const rows = [
   createData('Python Developers', 21,'12-oct-2022'),
 
 ];
-
 export default function Reports({header}) {
+
+  const dispatch = useDispatch()
+  const history = useNavigate();
+  const location = useLocation();
+
+
+  const lReports = useSelector (state => state.listReports)
+  const {error, loading, reports} = lReports
+
+  var reports_list = []
+
+
+
+  // for (let i = 0; i < reports.length; i++) {
+  //   const row = createData(reports[i].id, all[i].name, all[i].location, all[i].department,all[i].phone, all[i].email)
+  //   al_row.push(row)
+  // }
+
+  useEffect (()=>{
+    // dispatch(listAllAlumnis());
+  dispatch(listReports())
+
+
+    
+ console.log(reports)
+  
+  }, [])
+
   return (
     <main>
     <h1>{header}</h1>
@@ -35,22 +66,25 @@ export default function Reports({header}) {
         
           </TableRow>
         </TableHead>
+        {reports?
         <TableBody>
-          {rows.map((row) => (
+          {reports.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right"><FileDownloadIcon/></TableCell>
+              <TableCell align="right">{row.entries}</TableCell>
+              <TableCell align="right">{row.createdAt}</TableCell>
+              {/* <TableCell align="right">{row.carbs}</TableCell> */}
+              <TableCell align="right"><a href={`http://127.0.0.1:8000${row.report}`}><FileDownloadIcon/></a></TableCell>
             </TableRow>
           ))}
-        </TableBody>
+        </TableBody>:
+        console.log(reports)
+        }
       </Table>
     </TableContainer>
     </main>

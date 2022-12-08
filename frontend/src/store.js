@@ -3,12 +3,14 @@ import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
 // import {productListReducer,  productDetailsReducer} from './reducers/productReducers'
 // import { cartReducer } from './reducers/cartReducers'
-import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegisterReducer } from './reducers/UserReducers'
+import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegisterReducer,
+    userUpdatePasswordReducer
+} from './reducers/UserReducers'
 import {departmentListReducer} from './reducers/DepartmentReducers'
 import {DashboardReducer,recentAlumniListReducer} from './reducers/DashboardReducers'
 import {alumniReducer, bulk_alumniReducer, ListAllAlumniReducer, ListBsAlumniReducer, ListMsAlumniReducer, ListPhdAlumniReducer} from './reducers/AlumniReducers'
 
-
+import {generateReportReducers,reportListReducer} from './reducers/ReportReducers'
 
 // import { orderCreateReducer, orderDetailsReducer } from './reducers/orderReucers'
 
@@ -27,6 +29,9 @@ const reducer = combineReducers({
     listBsAlumnis: ListBsAlumniReducer,
     listMsAlumnis: ListMsAlumniReducer,
     listPhdAlumnis:ListPhdAlumniReducer,
+    changePassword:userUpdatePasswordReducer,
+    generateReport:generateReportReducers,
+    listReports:reportListReducer,
     
 })
 
