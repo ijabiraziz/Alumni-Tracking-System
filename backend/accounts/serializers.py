@@ -91,3 +91,14 @@ class DashboardStatsSerializer(serializers.ModelSerializer):
     def get_student_alumni(self, obj):
         std_alum = Alumni.objects.filter(is_student="Yes").count()
         return std_alum
+    
+    
+class UserDetailSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = MyUser
+        fields = ['id', 'name', 'email', 'department','phone_number','avator']
+
+
+  

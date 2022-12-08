@@ -13,7 +13,7 @@ import { listDepartments } from '../actions/DepartmentActions';
 function RegisterScreen() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [department, setDepartment] = useState('')
+    const [department, setDepartment] = useState('Computer Science')
     const [password, setPassword] = useState('')
 
 
@@ -90,6 +90,7 @@ function RegisterScreen() {
        :
                    
                     <select className="login_input input100" type="text" name="department" placeholder="Department"
+                    value={department}
                     onChange={(e)=> setDepartment(e.target.value)}
                     >
                         

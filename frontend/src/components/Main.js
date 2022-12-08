@@ -7,6 +7,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {getDashboardstats} from '../actions/DashboardActions'
 import Loader from './Loader';
+import { getUserDetails } from '../actions/UserActions';
+
+
 function Main({header}) {
 
   const dispatch = useDispatch()
@@ -16,12 +19,20 @@ function Main({header}) {
   const dashboardstats = useSelector (state => state.getDashboardstats)
   const {error, loading, dashboard} = dashboardstats
 
+  const userLogin = useSelector(state => state.userLogin)
+  const {userInfo} = userLogin
  
 
 
 
   useEffect (()=>{
     dispatch(getDashboardstats());
+    if (userInfo){
+      const token = userInfo.data.access
+      dispatch(getUserDetails(token))
+    
+    }
+
   }, [])
 
 

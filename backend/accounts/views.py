@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated
 from .utils import get_tokens_for_user
-from .serializers import  PasswordChangeSerializer, UserUpdateSerializer
+from .serializers import  PasswordChangeSerializer, UserUpdateSerializer,UserDetailSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -32,10 +32,10 @@ def list_users(request):
 
 
 @api_view(['GET'])
-def user_detail(request,pk):
+def user_detail(request):
     
     try:
-        user = MyUser.objects.get(pk=pk)
+        user = MyUser.objects.get(request.user)
     except:
         return Response({'message':'The User is Not Available' },status=status.HTTP_400_BAD_REQUEST)
     
@@ -93,6 +93,16 @@ def update_user(request,pk):
     serializer.is_valid(raise_exception=True)
     MyUser().perform_update(serializer)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserProfile(requests):
+    user = requests.user
+    serializer = UserDetailSerializer(user, many=False)
+    return Response(serializer.data)
+
+
 
 
 @api_view(['POST'])

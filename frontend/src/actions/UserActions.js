@@ -81,42 +81,34 @@ export const logout = () => (dispatch) => {
 
 
 
-export const getUserDetails = (id) => async (dispatch,  getState)=>{
+export const getUserDetails = (token) => async(dispatch) =>{
+
+
     try{
-
-        dispatch({
-            type: USER_DETAILS_REQUEST
-        })
-
-        const {
-            userLogin : {userInfo}, 
-        }  = getState()
+        dispatch({type:USER_DETAILS_REQUEST})
 
         const config =  {
 
             headers :{
                 'Content-type':'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${token}`
             }
         }
-        const {data} = await axios.get(
-            `/api/users/${id}/`,
-            config
-        )
-        dispatch({ 
-            type: USER_DETAILS_SUCCESS,
+
+
+        const {data} = await axios.get('http://127.0.0.1:8000/user-profile/',config)
+        dispatch({
+            type:USER_DETAILS_SUCCESS,
             payload:data
         })
     }
     catch(error){
-
         dispatch({
             type:USER_DETAILS_FAIL,
             payload:error.response && error.response.data.detail
             ? error.response.data.detail
             :error.message,
         })
-
     }
 }
 
