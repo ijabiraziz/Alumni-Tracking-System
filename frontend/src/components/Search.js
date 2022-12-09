@@ -54,6 +54,11 @@ function createData(id, name, location, department,phone, email) {
 export default function Search() {
   const [searchValue, setSearchValue] = React.useState('')
   const [selectedAlumnis, setSelectedAlumnis] = React.useState([])
+  const [renderedAlumnis, setrenderedAlumnis] = React.useState([])
+
+  // const [searchEntry, setSearchEntry] = React.useState('')
+
+
 
  
 
@@ -76,7 +81,18 @@ export default function Search() {
       const row = createData(all[i].id, all[i].name, all[i].location, all[i].department,all[i].phone, all[i].email)
       al_row.push(row)
     }
+  const [idealAlumni, setidealAlumni] = React.useState(al_row)
 
+
+    const handleSearch = (e)=>{
+      console.log(e.target.value)
+      setSearchValue(e.target.value)
+       const idealAlumni = all.filter((alumni_e)=>{
+        return alumni_e.name.toLowerCase().includes(e.target.value.toLowerCase())
+      })
+      console.log(idealAlumni)
+      setidealAlumni(idealAlumni)
+    }
 
 
   useEffect (()=>{
@@ -98,17 +114,19 @@ export default function Search() {
     <>
      <div style={{ height: 400, width: '100%' }}>
      <FormControl fullWidth sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Search </InputLabel>
+          <InputLabel htmlFor="outlined-adornment-amount"
+          
+          >Search </InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
             value={searchValue}
-            onChange={(e)=>setSearchValue(e.target.value)}
+            onChange={handleSearch}
             label="Name"
           />
         </FormControl>
         {al_row?
       <DataGrid
-        rows={al_row}
+        rows={idealAlumni}
         columns={mycolumns}
         pageSize={5}
         rowsPerPageOptions={[5]}
