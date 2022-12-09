@@ -7,7 +7,7 @@ import {listAllAlumnis} from '../actions/AlumniActions'
 import React, {useState,useEffect} from 'react';
 import { generateReport } from '../actions/ReportActions';
 import {useDispatch, useSelector} from 'react-redux';
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
@@ -85,7 +85,7 @@ export default function Search() {
 
 
     const handleSearch = (e)=>{
-      console.log(e.target.value)
+      // console.log(e.target.value)
       setSearchValue(e.target.value)
        const idealAlumni = all.filter((alumni_e)=>{
         return alumni_e.name.toLowerCase().includes(e.target.value.toLowerCase())
@@ -98,7 +98,7 @@ export default function Search() {
   useEffect (()=>{
     // dispatch(listAllAlumnis());
 
- console.log(selectedAlumnis)
+//  console.log(selectedAlumnis)
   
   }, [selectedAlumnis])
 
