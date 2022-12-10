@@ -72,6 +72,9 @@ function Setting() {
         <Col md={3}>
         <Form >
         <Form.Group controlId = 'name'>
+        <br/>
+          <h1>Update Your Profile</h1>
+          <br/>
    
 
 <FormControl fullWidth sx={{ m: 1 }}>

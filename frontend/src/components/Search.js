@@ -9,7 +9,17 @@ import { generateReport } from '../actions/ReportActions';
 import {useDispatch, useSelector} from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
+import AddIcon from '@mui/icons-material/Add';
+import { Typography } from '@mui/material';
+import Close from '@mui/icons-material/Close';
+
+import { TextField } from '@mui/material';
 
 const mycolumns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -57,6 +67,10 @@ export default function Search() {
   const [renderedAlumnis, setrenderedAlumnis] = React.useState([])
 
   // const [searchEntry, setSearchEntry] = React.useState('')
+  // const [selectedFile, setSelectedFile] = React.useState();
+  const [openFilePopup, setOpenFilePopup] = React.useState(false);  
+  const [fname, setFname] = React.useState('');  
+
 
 
 
@@ -104,14 +118,30 @@ export default function Search() {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    dispatch(generateReport("Sample name",selectedAlumnis.toString()))
+    setOpenFilePopup(true)
    
   }
 
+	const [isSelected, setIsSelected] = React.useState(false);
+  const handleClickFOpen = () => {
+    setOpenFilePopup(true);
+  };
+  const handleClickFClose = () => {
+    setOpenFilePopup(false);
+  };
 
+ 
+
+
+  const handleFSubmission = () => {
+    dispatch(generateReport(fname,selectedAlumnis.toString()))
+
+    setOpenFilePopup(false);
+    
+  }
   return (
     
-    <>
+    <React.Fragment>
      <div style={{ height: 400, width: '100%' }}>
      <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount"
@@ -146,8 +176,52 @@ export default function Search() {
           Generate Report
         </Button>
 </Box>
+
     </div>
-    </>
+
+    <Dialog
+        fullWidth={true}
+        maxWidth='md'
+        open={openFilePopup}
+        onClose={handleClickFClose}
+      >
+        <DialogTitle>
+        <div style={{ display: 'flex' }}>
+                    <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+                       Add Alumni
+                    </Typography>
+                    <Button
+                        onClick={()=>{setOpenFilePopup(false)}}>
+                        <Close />
+                    </Button>
+                </div>
+        </DialogTitle>
+        <DialogContent>
+          
+        
+      
+      <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <TextField fullWidth label="Enter File Name" id="fullWidth"
+      value={fname}
+      onChange={(e)=>setFname(e.target.value)}
+      />
+    </Box>
+   
+		
+     
+        
+        </DialogContent>
+        <DialogActions>
+        <Button onClick={handleClickFClose}>Close</Button>
+          <Button onClick={handleFSubmission}>Generate</Button>
+        </DialogActions>
+        
+      </Dialog>
+    </React.Fragment>
    
   );
 }
