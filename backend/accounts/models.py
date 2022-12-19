@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from .utils import generate_hash
 
 
 
@@ -121,6 +121,15 @@ class Batch(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
+    
+# import hashlib
+
+# def generate_hash():
+#     import uuid
+#     data = str(uuid.uuid4())
+#     return hashlib.sha256(data.encode('utf-8')).hexdigest()
+    
     
 class Alumni(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
@@ -138,6 +147,9 @@ class Alumni(models.Model):
     batch =models.ForeignKey(Batch, on_delete=models.CASCADE, blank=True, null=True)
     program =  models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True)
     createdAt =models.DateTimeField(auto_now_add=True)
+    hash_data =     models.CharField(max_length=64, default= generate_hash)
+
+    
     
     
     
@@ -201,7 +213,9 @@ class BulkAlumni(models.Model):
 
     
     
-
+class OneTimeLink(models.Model):
+    link = models.CharField(max_length=255)
+    expiration_date = models.DateTimeField()
     
     
     

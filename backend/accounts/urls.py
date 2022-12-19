@@ -30,6 +30,13 @@ urlpatterns =[
      path('list-reports/', views.list_reports , name='list-reports'),
      path('list-batch/', views.list_batch , name='list-batch'),
      path('list-program/', views.list_program , name='list-program'),
+    path('one-time-link/', views.one_time_link_view, name='one-time-link'),
+    path('update-alumni/<str:hash_data>/', views.update_alumni, name='update-alumni'),
+    path('send-email/', views.send_email, name='send-email'),
+    
+   
+    
+    
      
      
      

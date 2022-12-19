@@ -26,6 +26,14 @@ from django.contrib.auth.hashers import make_password
 from .serializers import BatchSerializer, ProgramSerializer
 
 
+from django.shortcuts import render, HttpResponse, reverse
+from .serializers import OneTimeLinkSerializer
+from .models import OneTimeLink
+from .utils import generate_hash
+
+
+
+
 @api_view(['GET'])
 def get_routes(request):
     return Response('Base Route')
@@ -245,6 +253,69 @@ def list_program(request):
     serializer =ProgramSerializer(reports, many=True)
     return Response (serializer.data)
 
+import string
+import random
+from django.utils import timezone
 
+def generate_one_time_link():
+  base_url = "localhost:8000"
+  characters = string.ascii_letters + string.digits
+  random_text = ''.join(random.choices(characters, k=8))
+  one_time_link = base_url + "/" + random_text
+  return one_time_link
 
+@api_view(['POST'])
+def one_time_link_view(request):
+    # Generate the one-time link and set the expiration date
+    link = generate_one_time_link()
+    expiration_date = timezone.now() + timezone.timedelta(days=1)
+    one_time_link = OneTimeLink.objects.create(link=link, expiration_date=expiration_date)
+
+    serializer = OneTimeLinkSerializer(one_time_link)
+    return Response(serializer.data)
+
+@api_view(['PATCH','GET'])
+def update_alumni(request, hash_data):
+    # Retrieve the model instance
+    
+    instance = Alumni.objects.get( hash_data=hash_data)
+    # Update the model instance with the data in the request
+    if request.method == 'PATCH':
+        instance.hash_data=generate_hash()
+    serializer = AlumniSerializer(instance, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+
+    return Response(serializer.data)
+
+from django.core.mail import send_mail
+
+@api_view(['POST'])
+def send_email(request ):
+    data = request.data
+    ids_list = data['ids_list']
+    s_list= ids_list.split(',')
+    org_l= []
+    for e in s_list:
+        r = int(e)
+        org_l.append(r)
+    print( org_l)
+    d_list=[]
+    for pk in org_l:
+        alumni=Alumni.objects.get(pk=pk)
+        serializer = AlumniSerializer(alumni, many=False)  
+        d_list.append(dict(serializer.data))
+
+    for alum in d_list:
+        alum_email= alum.get('email')
+        alum_hash = alum.get('hash_data')
+        alum_name = alum.get('name')
+        # email_list.append(alum_email)
+        
+        subject = 'Please Update Your Profile'
+        message = f'Hi {alum_name}\n This is a link where you Can Update Your Profile, http://localhost:3000/update-alumni/{alum_hash}'
+        email_from = 'haxratali0@gmail.com'
+        recipient_list = [alum_email]
+        send_mail(subject, message, email_from, recipient_list)
+    return Response('Message Send Successfully')
 

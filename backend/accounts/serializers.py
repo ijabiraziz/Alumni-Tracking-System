@@ -1,6 +1,13 @@
 from pyexpat import model
 from rest_framework import serializers
 from .models import MyUser,Alumni,Report,Department,BulkAlumni,Batch, Program
+from .models import OneTimeLink
+
+class OneTimeLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OneTimeLink
+        fields = ('link', 'expiration_date')
+
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,7 +70,7 @@ class AlumniSerializer(serializers.ModelSerializer):
      
     class Meta:
         model = Alumni 
-        fields = ['id','name','email','phone','location','company','position','cgpa','is_employed','is_student','createdAt', 'department_name','batch_name','program_name', 'department', 'batch', 'program']
+        fields = ['id','name','email','phone','location','company','position','cgpa','is_employed','is_student','createdAt', 'department_name','batch_name','program_name', 'department', 'batch', 'program','hash_data']
         
     def get_department_name(self, obj):
         try:

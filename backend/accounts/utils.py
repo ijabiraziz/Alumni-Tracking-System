@@ -2,7 +2,8 @@ import pandas as pd
 from rest_framework_simplejwt.tokens import RefreshToken
 import random
 import string
-
+import hashlib
+import uuid
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -27,3 +28,8 @@ def get_random_string():
     print(result_str)
 
 
+
+def generate_hash():
+    data = str(uuid.uuid4())
+    return hashlib.sha256(data.encode('utf-8')).hexdigest()
+    
