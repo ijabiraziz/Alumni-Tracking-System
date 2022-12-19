@@ -1,6 +1,6 @@
 from pyexpat import model
 from rest_framework import serializers
-from .models import MyUser,Alumni,Report,Department,BulkAlumni
+from .models import MyUser,Alumni,Report,Department,BulkAlumni,Batch, Program
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,14 +11,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = '__all__'
-
-    def save(self):
-        user = MyUser(email=self.validated_data['email'], name=self.validated_data['name'], department=self.validated_data['department'])
-        password = self.validated_data['password']
-        user.set_password(password)
         
+    def save(self):
+        user = MyUser(email=self.validated_data['email'])
+        password = self.validated_data['password']
+        user.department_id = self.validated_data['department_id']
+        user.set_password(password)
         user.save()
         return user
+    
+
     
 class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,9 +56,36 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         
 class AlumniSerializer(serializers.ModelSerializer):
+    department_name = serializers.SerializerMethodField(read_only=True)
+    batch_name = serializers.SerializerMethodField(read_only=True)
+    program_name = serializers.SerializerMethodField(read_only=True)
+    
+     
     class Meta:
         model = Alumni 
-        fields = '__all__'
+        fields = ['id','name','email','phone','location','company','position','cgpa','is_employed','is_student','createdAt', 'department_name','batch_name','program_name', 'department', 'batch', 'program']
+        
+    def get_department_name(self, obj):
+        try:
+            dept_name = Department.objects.get(name=obj.department).name
+            return dept_name
+        except:
+            return ""
+    
+    def get_batch_name(self, obj):
+        try:   
+            batch_name = Batch.objects.get(name=obj.batch).name
+            return batch_name
+        except:
+            return ''
+    
+    def get_program_name(self, obj):
+        try:
+            program_name = Program.objects.get(name=obj.program).name
+            return program_name
+        except:
+            return ''
+        
         
 class ReportSerializer(serializers.ModelSerializer):
     
@@ -96,11 +125,22 @@ class DashboardStatsSerializer(serializers.ModelSerializer):
     
     
 class UserDetailSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = MyUser
-        fields = ['id', 'name', 'email', 'department','phone_number','avator']
+        fields = '__all__'
+        
+        
+class ProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = '__all__'
+        
+class BatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Batch
+        fields = '__all__'
+        
+
+        
 
 
-  

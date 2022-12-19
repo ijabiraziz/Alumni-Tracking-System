@@ -13,7 +13,9 @@ import { listDepartments } from '../actions/DepartmentActions';
 function RegisterScreen() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [department, setDepartment] = useState('Computer Science')
+    const [department, setDepartment] = useState('')
+    const [department_id, setDepartment_id] = useState(1)
+
     const [password, setPassword] = useState('')
 
 
@@ -36,17 +38,19 @@ function RegisterScreen() {
       }
     }, [history, userInfo, redirect])
 
+    function getIdByName(name) {
+        const obj = departments.find(item => item.name === name);
+        return obj ? obj.id : null;
+      }
 
     const  submitHandler = (e) => {
-
-
         e.preventDefault()
-
-        dispatch(register(name,department,email,password))
-      
+        setDepartment_id(getIdByName(department))
+        dispatch(register(name,department_id,email,password))
       }
 
 
+      
   return (
   <div className="limiter">
 
@@ -89,7 +93,7 @@ function RegisterScreen() {
        : d_error ? <Message variant='danger'> {d_error}</Message>
        :
                    
-                    <select className="login_input input100" type="text" name="department" placeholder="Department"
+                    <select className="login_input input100" type="text" name="department_id" placeholder="Department"
                     value={department}
                     onChange={(e)=> setDepartment(e.target.value)}
                     >

@@ -5,6 +5,11 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+
 
 def upload_to(instance, filename):
     return 'bulk_alumni/{filename}'.format(filename=filename)
@@ -53,9 +58,9 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     
     name = models.CharField(max_length=50, null=True,blank=True)
-    department = models.CharField(max_length=50, null=True,blank=True)
-    phone_number = models.CharField(max_length=20,null=True)
-    avator = models.ImageField(upload_to ='uploads/',null=True)
+    department_id = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    phone_number = models.CharField(max_length=20,null=True, blank=True)
+    avator = models.ImageField(upload_to ='uploads/',null=True, blank=True)
     
     
     objects = MyUserManager()
@@ -63,7 +68,11 @@ class MyUser(AbstractBaseUser):
     # REQUIRED_FIELDS = ['date_of_birth']
 
     def __str__(self):
-        return self.email
+        try:
+            dept = str(Department.objects.get(name=self.department_id))
+            return self.email + " Represents " + dept
+        except:
+            return self.email
     
     
     def has_perm(self, perm, obj=None):
@@ -100,12 +109,23 @@ class MyUser(AbstractBaseUser):
     
 
 
+class Program(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self) -> str:
+        return self.name
+    
+class Batch(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self) -> str:
+        return self.name
 
     
 class Alumni(models.Model):
     name = models.CharField(max_length=200, null=True,blank=True)
     email = models.EmailField()
-    department = models.CharField(max_length=200, null=True,blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, blank=True, null=True)
     phone = models.CharField(max_length=20, null=True,blank=True)
     location = models.CharField(max_length=200)
     company= models.CharField(max_length=200)
@@ -115,8 +135,8 @@ class Alumni(models.Model):
     is_employed=models.CharField(max_length=200)
     is_student=models.CharField(max_length=200)
 
-    batch = models.CharField(max_length=200)
-    program = models.CharField(max_length=200)
+    batch =models.ForeignKey(Batch, on_delete=models.CASCADE, blank=True, null=True)
+    program =  models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True)
     createdAt =models.DateTimeField(auto_now_add=True)
     
     
@@ -137,11 +157,6 @@ class Report(models.Model):
         return self.name
     
 
-class Program(models.Model):
-    name = models.CharField(max_length=200)
-    
-    def __str__(self) -> str:
-        return self.name
     
 class BulkAlumni(models.Model):
     # creator = models.ForeignKey(
@@ -154,8 +169,39 @@ class BulkAlumni(models.Model):
     def __str__(self) -> str:
         return self.title
     
+    def parse_file(self):
+        file_obj =  self.file_url
+
+        # # parse it 
+        import pandas as pd
+        df = pd.read_excel(file_obj)
+        d=df.T.to_dict().values()
+        alumni_list=list(d)
+        for alumni in alumni_list:   
+            
+            department_instance =  Department.objects.get(name=alumni['department'])
+            batch_instance = Batch.objects.get(name=alumni['batch'])
+            program_instance = Program.objects.get(name=alumni['program'])
+              
+            alumni_obj = Alumni.objects.create(      
+            name = alumni['name'],
+            email = alumni['email'],
+            department = department_instance,
+            location = alumni['location'],
+            phone = alumni['phone'],
+            company = alumni['company'],
+            position = alumni['position'],
+            cgpa = alumni['cgpa'],
+            is_employed = alumni['is_employed'],
+            is_student = alumni['is_student'],
+            batch = batch_instance,
+            program = program_instance
+        )
+            alumni_obj.save()
+
     
     
+
     
-        
+    
     

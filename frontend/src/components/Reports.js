@@ -47,7 +47,7 @@ export default function Reports({header}) {
 
 
     
- console.log(reports)
+
   
   }, [])
 

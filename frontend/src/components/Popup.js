@@ -29,6 +29,8 @@ import React, {useState,useEffect} from 'react';
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {useDispatch, useSelector} from 'react-redux';
 import { addAlumni, add_bulk_Alumni } from '../actions/AlumniActions';
+import { listBatches } from '../actions/AlumniActions';
+import { listPrograms } from '../actions/AlumniActions';
 
 
 export default function Popup() {
@@ -59,8 +61,17 @@ export default function Popup() {
   const departmentList = useSelector(state=>state.listDepartments)
   const {d_error, d_loading, departments} = departmentList
 
+  const batchList = useSelector(state=>state.listBatches)
+  const {batch_list} = batchList
+
+  const programList = useSelector(state=>state.listPrograms)
+  const { program_list} = programList
+
+
   useEffect (()=>{
     dispatch(listDepartments())
+    dispatch(listBatches())
+    dispatch(listPrograms())
   
 }, [open])
 
@@ -90,11 +101,22 @@ export default function Popup() {
     console.log(file.name)
 
 	};
+
+  function getIdByName(list,name) {
+    const obj = list.find(item => item.name === name);
+    return obj ? obj.id : null;
+  }
+
+  
 	const handleSubmission = () => {
+    const batch_id= getIdByName(batch_list, batch)
+    const program_id = getIdByName(program_list, program)
+    const department_id = getIdByName(departments, department)
+
     dispatch(addAlumni(
       name,
       email,
-      department,
+      department_id,
       location,
       phoneNo,
       company,
@@ -102,8 +124,8 @@ export default function Popup() {
       cgpa,
       isEmployed,
       isStudent,
-      batch,
-      program
+      batch_id,
+      program_id
       ))
       setOpen(false);
 
@@ -264,30 +286,34 @@ export default function Popup() {
             label="CGPA"
           />
         </FormControl>
-        <FormControl  sx={{ m: 1 }}>
-          <InputLabel htmlFor="outlined-adornment-amount">Batch</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            value={batch}
-            // onChange={setBatch((e)=>e.target.value)}
-            onChange={(e)=>setBatch(e.target.value)}
-            label="Batch"
-          />
-        </FormControl>
-        <FormControl sx={{ m: 1 }}>
-  <InputLabel id="demo-simple-select-label" >Program</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    value={program}
-    label="Program"
-    onChange={(e)=>setProgram(e.target.value)}
-  >
-    <MenuItem value={"BS"}>BS</MenuItem>
-    <MenuItem value={"PHD"}>PHD</MenuItem>
-    <MenuItem value={"MS"}>MS</MenuItem>
-  </Select>
-</FormControl>
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Batch"
+          value={batch}
+          onChange={(e)=>setBatch(e.target.value)}
+          fullWidth sx={{ m: 1 }}
+        >
+          {batch_list.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Batch"
+          value={program}
+          onChange={(e)=>setProgram(e.target.value)}
+          fullWidth sx={{ m: 1 }}
+        >
+          {program_list.map((option) => (
+            <MenuItem key={option.name} value={option.name}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
 <FormControl sx={{ m: 1 }}>
   <InputLabel id="demo-simple-select-label" >isEmployed</InputLabel>
   <Select

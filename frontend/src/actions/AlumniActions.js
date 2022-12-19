@@ -23,6 +23,15 @@ import {
     LIST_PHD_ALUMNI_REQUEST,
     LIST_PHD_ALUMNI_SUCCESS,
 
+    LIST_BATCH_FAIL,
+    LIST_BATCH_REQUEST,
+    LIST_BATCH_SUCCESS,
+
+    LIST_PROGRAM_FAIL,
+    LIST_PROGRAM_REQUEST,
+    LIST_PROGRAM_SUCCESS, 
+
+
 } from '../constants/AlumniConstants'
 import axios from 'axios';
 
@@ -139,6 +148,44 @@ export const listAllAlumnis = () => async(dispatch) =>{
     catch(error){
         dispatch({
             type:LIST_ALL_ALUMNI_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
+}
+
+export const listBatches = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_BATCH_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-batch/')
+        dispatch({
+            type:LIST_BATCH_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_BATCH_FAIL,
+            payload:error.response && error.response.data.detail
+            ? error.response.data.detail
+            :error.message,
+        })
+    }
+}
+
+export const listPrograms = () => async(dispatch) =>{
+    try{
+        dispatch({type:LIST_PROGRAM_REQUEST})
+        const {data} = await axios.get('http://127.0.0.1:8000/list-program/')
+        dispatch({
+            type:LIST_PROGRAM_SUCCESS,
+            payload:data
+        })
+    }
+    catch(error){
+        dispatch({
+            type:LIST_PROGRAM_FAIL,
             payload:error.response && error.response.data.detail
             ? error.response.data.detail
             :error.message,

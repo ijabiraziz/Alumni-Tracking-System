@@ -8,7 +8,10 @@ import { userUpdateProfileReducer,userLoginReducer ,userDetailsReducer, userRegi
 } from './reducers/UserReducers'
 import {departmentListReducer} from './reducers/DepartmentReducers'
 import {DashboardReducer,recentAlumniListReducer} from './reducers/DashboardReducers'
-import {alumniReducer, bulk_alumniReducer, ListAllAlumniReducer, ListBsAlumniReducer, ListMsAlumniReducer, ListPhdAlumniReducer} from './reducers/AlumniReducers'
+import {alumniReducer, bulk_alumniReducer, ListAllAlumniReducer, ListBsAlumniReducer, ListMsAlumniReducer, ListPhdAlumniReducer,
+ListBatchReducer,
+ListProgramReducer,
+} from './reducers/AlumniReducers'
 
 import {generateReportReducers,reportListReducer} from './reducers/ReportReducers'
 
@@ -32,7 +35,8 @@ const reducer = combineReducers({
     changePassword:userUpdatePasswordReducer,
     generateReport:generateReportReducers,
     listReports:reportListReducer,
-    
+    listBatches:ListBatchReducer,
+    listPrograms:ListProgramReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')?

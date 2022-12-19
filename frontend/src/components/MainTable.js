@@ -35,7 +35,7 @@ function MainTable() {
     <div className="recent-alumni">
     <h2>Recent Alumni</h2>
     <table>
-    {console.log(alumnis)}
+
       <thead>
         <tr>
           <th>Alumni Name</th>
@@ -53,7 +53,7 @@ function MainTable() {
 {alumnis.map(alumni =>(
 <tr key={alumni.id}>
 <td>{alumni.name}</td>
-<td>{alumni.program}</td>
+<td>{alumni.program_name}</td>
 <td>{alumni.cgpa}</td>
 <td className="warning">{alumni.phone}</td>
 <td className="primary">Details</td>

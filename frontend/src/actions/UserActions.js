@@ -162,12 +162,16 @@ export const updateUserProfile = (name, email, token) => async (dispatch)=>{
 }
 
 
-export const register = (name,department, email , password) => async (dispatch)=>{
+export const register = (name,department_id, email , password) => async (dispatch)=>{
     var bodyFormData = new FormData();
     bodyFormData.append('name', name);
-    bodyFormData.append('department',department);
+    bodyFormData.append('department_id',department_id);
     bodyFormData.append('email', email);
     bodyFormData.append('password',password);
+
+    var bodyFormData1 = new FormData();
+    bodyFormData1.append('email', email);
+    bodyFormData1.append('password',password);
     
 
         dispatch({
@@ -187,11 +191,10 @@ export const register = (name,department, email , password) => async (dispatch)=
                     payload:response
                 })
 
-
                 axios({
                     method: "post",
                     url: "http://127.0.0.1:8000/login/",
-                    data: bodyFormData,
+                    data: bodyFormData1,
                     headers: { "Content-Type": "multipart/form-data" },
                   })
                     .then(function (response) {

@@ -12,7 +12,7 @@ from .serializers import  PasswordChangeSerializer, UserUpdateSerializer,UserDet
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import BulkAlumni, Report
+from .models import BulkAlumni, Report, Batch, Program
 from .serializers import BulkAlumniSerializer
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -22,6 +22,9 @@ from pathlib import Path
 from django.core.files import File
 
 from .utils import get_random_string
+from django.contrib.auth.hashers import make_password
+from .serializers import BatchSerializer, ProgramSerializer
+
 
 @api_view(['GET'])
 def get_routes(request):
@@ -50,8 +53,6 @@ def user_detail(request):
 @api_view(['POST'])
 def register_user(request):
     print(request.data)
-    deptt= Department.objects.get(name=request.data['department'])
-    print(deptt)
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -66,7 +67,7 @@ def login_user(request):
     
     email = request.data['email']
     password = request.data['password']
-    user = authenticate(request, email=email, password=password)
+    user = authenticate(request, email=email, password= password)
     
     instance = MyUser.objects.filter(email=email)[0]
     print(instance.name)
@@ -130,64 +131,19 @@ def list_departments(request):
     
 @api_view(['POST'])
 def add_alumni(request):
-    data = request.data
-    alumni = Alumni.objects.create(
-        name = data['name'],
-        email = data['email'],
-        department = data['department'],
-        location = data['location'],
-        phone = data['phone'],
-        company = data['company'],
-        position = data['position'],
-        cgpa = data['cgpa'],
-        is_employed = data['is_employed'],
-        is_student = data['is_student'],
-        batch = data['batch'],
-        program = data['program']
-    )
-    alumni.save()
-    serializer = AlumniSerializer(alumni, many=False)    
-    return Response(serializer.data)
+    serializer = AlumniSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
 
 @api_view(['POST'])
 def add_bulk_alumni(request):
-
-    
     parser_classes = (MultiPartParser, FormParser)
-
     serializer = BulkAlumniSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        
-        # parse it 
-        import pandas as pd
-        from pathlib import Path
-        
-        
-        pathf= r'C:\Users\Ali-Pc\Desktop\Git\Alumni-Tracking-System\mediafiles\bulk_alumni\bulk_1PAapWE.xlsx'
-        
-        pathe = Path(pathf)
-        print(pathe)
-        df = pd.read_excel(pathe)
-        d=df.T.to_dict().values()
-        alumni_list=list(d)
-        for alumni in alumni_list:      
-            alumni_obj = Alumni.objects.create(      
-            name = alumni['name'],
-            email = alumni['email'],
-            department = alumni['department'],
-            location = alumni['location'],
-            phone = alumni['phone'],
-            company = alumni['company'],
-            position = alumni['position'],
-            cgpa = alumni['cgpa'],
-            is_employed = alumni['is_employed'],
-            is_student = alumni['is_student'],
-            batch = alumni['batch'],
-            program = alumni['program']
-        )
-            alumni_obj.save()
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -216,7 +172,7 @@ def list_alumnis(request):
 
 @api_view(['GET'])
 def list_bs_alumnis(request):
-    alumni =reversed( Alumni.objects.filter(program="BS"))
+    alumni =reversed( Alumni.objects.filter(program=1))
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
 
@@ -224,7 +180,7 @@ def list_bs_alumnis(request):
 
 @api_view(['GET'])
 def list_ms_alumnis(request):
-    alumni =reversed( Alumni.objects.filter(program="MS"))
+    alumni =reversed( Alumni.objects.filter(program=2))
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
 
@@ -232,7 +188,7 @@ def list_ms_alumnis(request):
 
 @api_view(['GET'])
 def list_phd_alumnis(request):
-    alumni =reversed( Alumni.objects.filter(program="PHD"))
+    alumni =reversed( Alumni.objects.filter(program=3))
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
 
@@ -276,3 +232,19 @@ def list_reports(request):
     reports =Report.objects.all()
     serializer =ReportSerializer(reports, many=True)
     return Response (serializer.data)
+
+@api_view(['GET'])
+def list_batch(request):
+    reports =Batch.objects.all()
+    serializer =BatchSerializer(reports, many=True)
+    return Response (serializer.data)
+
+@api_view(['GET'])
+def list_program(request):
+    reports =Program.objects.all()
+    serializer =ProgramSerializer(reports, many=True)
+    return Response (serializer.data)
+
+
+
+

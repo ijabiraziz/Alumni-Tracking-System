@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import MyUser, Alumni, Report,Department, Program, BulkAlumni
+from accounts.models import MyUser, Alumni, Report,Department, Program, BulkAlumni, Batch
 
 admin.site.register(MyUser)
 admin.site.register(Report)
@@ -7,3 +7,5 @@ admin.site.register(Department)
 admin.site.register(Alumni)
 admin.site.register(Program)
 admin.site.register(BulkAlumni)
+admin.site.register(Batch)
+

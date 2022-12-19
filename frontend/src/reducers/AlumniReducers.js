@@ -23,7 +23,14 @@ import {
     LIST_PHD_ALUMNI_REQUEST,
     LIST_PHD_ALUMNI_SUCCESS,
 
-    
+    LIST_BATCH_FAIL,
+    LIST_BATCH_REQUEST,
+    LIST_BATCH_SUCCESS,
+
+    LIST_PROGRAM_FAIL,
+    LIST_PROGRAM_REQUEST,
+    LIST_PROGRAM_SUCCESS,  
+
 } from '../constants/AlumniConstants'
 
 export const alumniReducer= (state={},action)=> {
@@ -66,6 +73,35 @@ export const ListAllAlumniReducer= (state={all_alumni:[]},action)=> {
         return state
     }
 }
+
+export const ListBatchReducer= (state={batch_list:[]},action)=> {
+    switch(action.type){
+        case LIST_BATCH_REQUEST:
+            return {loading:true , batch_list:[]}
+        case LIST_BATCH_SUCCESS:
+            return {loading:false , batch_list:action.payload}
+        case LIST_BATCH_FAIL:
+            return {loading:false ,error: action.payload}
+
+        default :
+        return state
+    }
+}
+
+export const ListProgramReducer= (state={program_list:[]},action)=> {
+    switch(action.type){
+        case LIST_PROGRAM_REQUEST:
+            return {loading:true , program_list:[]}
+        case LIST_PROGRAM_SUCCESS:
+            return {loading:false , program_list:action.payload}
+        case LIST_PROGRAM_FAIL:
+            return {loading:false ,error: action.payload}
+
+        default :
+        return state
+    }
+}
+
 
 export const ListBsAlumniReducer= (state={bs_alumni:[]},action)=> {
     switch(action.type){

@@ -137,7 +137,7 @@ export default function BsAlumni({header}) {
 
   const myapply = (alumni)=>{
     var a=createAlumniData(alumni.id,alumni.name,alumni.is_employed,
-      alumni.is_student,alumni.cgpa,alumni.batch,alumni.email, alumni.phone,
+      alumni.is_student,alumni.cgpa,alumni.batch_name,alumni.email, alumni.phone,
       alumni.location)  
       al_row.push(a)
   }
