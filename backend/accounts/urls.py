@@ -33,6 +33,8 @@ urlpatterns =[
     path('one-time-link/', views.one_time_link_view, name='one-time-link'),
     path('update-alumni/<str:hash_data>/', views.update_alumni, name='update-alumni'),
     path('send-email/', views.send_email, name='send-email'),
+    path('search-alumni/', views.search_alumni, name='search-alumni'),
+    
     
    
     

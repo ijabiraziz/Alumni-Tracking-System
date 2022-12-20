@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from accounts.models import MyUser,Department, Alumni
 from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer,ReportSerializer
+from django.db.models import Q
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -319,3 +320,75 @@ def send_email(request ):
         send_mail(subject, message, email_from, recipient_list)
     return Response('Message Send Successfully')
 
+
+
+
+@api_view(['GET','POST'])
+def search_alumni(request):
+    if request.method == 'GET':
+        qu = Alumni.objects.all()
+        serializer = AlumniSerializer(qu, many=True)  
+        print(serializer.data)     
+        return Response(serializer.data)
+        
+    elif request.method == 'POST':
+        
+        name = request.GET.get('name')
+        location = request.GET.get('location')
+        email =request.GET.get('email')
+        phone =request.GET.get('phone')
+        company=request.GET.get('company')
+        position =request.GET.get('position')
+    
+    
+    # program = request.GET.get('program')
+    
+    
+        if name :
+            # search model based on multiple fields
+            results = Alumni.objects.filter(
+                Q(name__icontains=name) 
+            
+            )
+            
+        if email:
+            email_results = Alumni.objects.filter(
+                Q(email__icontains=email) 
+            
+            )
+            results.union(email_results)
+            
+        if location:
+            location_results = Alumni.objects.filter(
+                Q(location__icontains=location) 
+            
+            )
+            results.union(location_results)
+        if phone:
+            phone_results = Alumni.objects.filter(
+                Q(phone__icontains=phone) 
+            
+            )
+            results.union(phone_results)
+        if company:
+            company_results = Alumni.objects.filter(
+                Q(company__icontains=company) 
+            
+            )
+            results.union(company_results)
+        if position:
+            position_results = Alumni.objects.filter(
+                Q(position__icontains=position) 
+            
+            )
+            results.union(position_results)
+   
+            
+
+        
+        serializer = AlumniSerializer(results, many=True)
+        print(serializer.data)
+            
+        return Response(serializer.data)
+    else:
+        return Response('Bad Request Please do GET or Post')
