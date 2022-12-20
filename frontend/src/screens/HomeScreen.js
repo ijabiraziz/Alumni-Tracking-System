@@ -72,7 +72,9 @@ function HomeScreen() {
         selected==0?  <Main header={'Dashboard'}/>
         :selected==1? <Reports header={'Reports'}/>
         :selected==2? <Search/>
+        // :selected==3? <AllAlumniList header={'All Alumnis'}/>
         :selected==3? <AllAlumniList header={'All Alumnis'}/>
+
         :selected==4? <BsAlumni header={'BS Alumnis'}/>
         :selected==5? <MsAlumniList header={'MS Alumni'}/>
         :selected==6? <PhdAlumniList header={'PHD Aalumni'}/>

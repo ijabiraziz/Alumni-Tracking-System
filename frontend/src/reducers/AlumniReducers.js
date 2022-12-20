@@ -31,6 +31,21 @@ import {
     LIST_PROGRAM_REQUEST,
     LIST_PROGRAM_SUCCESS,  
 
+    ALUMNI_UPDATE_FAIL,
+    ALUMNI_UPDATE_REQUEST,
+    ALUMNI_UPDATE_SUCCESS,  
+
+    ALUMNI_DATA_FAIL,
+    ALUMNI_DATA_REQUEST,
+    ALUMNI_DATA_SUCCESS,  
+
+    ALUMNI_SEARCH_FAIL,
+    ALUMNI_SEARCH_REQUEST,
+    ALUMNI_SEARCH_SUCCESS,  
+
+    
+
+
 } from '../constants/AlumniConstants'
 
 export const alumniReducer= (state={},action)=> {
@@ -67,6 +82,20 @@ export const ListAllAlumniReducer= (state={all_alumni:[]},action)=> {
         case LIST_ALL_ALUMNI_SUCCESS:
             return {loading:false , all_alumni:action.payload}
         case LIST_ALL_ALUMNI_FAIL:
+            return {loading:false ,error: action.payload}
+
+        default :
+        return state
+    }
+}
+
+export const ListSearchAlumniReducer= (state={search_alumni:[]},action)=> {
+    switch(action.type){
+        case ALUMNI_SEARCH_REQUEST:
+            return {loading:true , search_alumni:[]}
+        case ALUMNI_SEARCH_SUCCESS:
+            return {loading:false , search_alumni:action.payload}
+        case ALUMNI_SEARCH_FAIL:
             return {loading:false ,error: action.payload}
 
         default :
@@ -141,3 +170,31 @@ export const ListPhdAlumniReducer= (state={phd_alumni:[]},action)=> {
         return state
     }
 }
+
+
+export const alumniRetriveReducer= (state={},action)=> {
+    switch(action.type){
+        case ALUMNI_DATA_REQUEST:
+            return {loading:true }
+        case ALUMNI_DATA_SUCCESS:
+            return {loading:false , alumni:action.payload}
+        case ALUMNI_DATA_FAIL:
+            return {loading:false ,error: action.payload}
+        default :
+        return state
+    }
+}
+
+export const alumniUpdateReducer= (state={},action)=> {
+    switch(action.type){
+        case ALUMNI_UPDATE_REQUEST:
+            return {loading:true }
+        case ALUMNI_UPDATE_SUCCESS:
+            return {loading:false , alumni:action.payload}
+        case ALUMNI_UPDATE_FAIL:
+            return {loading:false ,error: action.payload}
+        default :
+        return state
+    }
+}
+

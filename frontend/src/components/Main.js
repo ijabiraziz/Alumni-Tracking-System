@@ -10,7 +10,7 @@ import Loader from './Loader';
 import { getUserDetails } from '../actions/UserActions';
 
 import { listAllAlumnis } from '../actions/AlumniActions';
-
+import { get_search_alumni } from '../actions/AlumniActions';
 function Main({header}) {
 
   const dispatch = useDispatch()
@@ -29,6 +29,7 @@ function Main({header}) {
   useEffect (()=>{
     dispatch(getDashboardstats());
     dispatch(listAllAlumnis());
+    dispatch(get_search_alumni())
     if (userInfo){
       const token = userInfo.data.access
       dispatch(getUserDetails(token))

@@ -11,9 +11,14 @@ import {DashboardReducer,recentAlumniListReducer} from './reducers/DashboardRedu
 import {alumniReducer, bulk_alumniReducer, ListAllAlumniReducer, ListBsAlumniReducer, ListMsAlumniReducer, ListPhdAlumniReducer,
 ListBatchReducer,
 ListProgramReducer,
+alumniRetriveReducer,
+alumniUpdateReducer,
+ListSearchAlumniReducer,
+
 } from './reducers/AlumniReducers'
 
 import {generateReportReducers,reportListReducer} from './reducers/ReportReducers'
+import { sendEmailReducers } from './reducers/EmailReducers'
 
 // import { orderCreateReducer, orderDetailsReducer } from './reducers/orderReucers'
 
@@ -37,6 +42,10 @@ const reducer = combineReducers({
     listReports:reportListReducer,
     listBatches:ListBatchReducer,
     listPrograms:ListProgramReducer,
+    updateAlumni:alumniUpdateReducer,
+    retriveAlumni:alumniRetriveReducer,
+    sendEMail:sendEmailReducers,
+    searchAlumni:ListSearchAlumniReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')?
