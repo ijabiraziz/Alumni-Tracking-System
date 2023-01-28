@@ -1,0 +1,3 @@
+,id,name,email,phone,location,company,position,cgpa,is_employed,is_student,createdAt,department_name,batch_name,program_name,department,batch,program,hash_data
+0,66,Hanif,gul76696@gmail.com,923159675198,"Peshawar, Pakistan",DevtSoft,Web Developer,2.3,Yes,Yes,2022-12-20T19:19:17.511118Z,Computer Science,21,BS,1,1,1,85ebac531656853806f8dbac0ed94fe41562f3bcb3349183ab8c311e0853090d
+1,69,Majid Khan,alixaprodev@gmail.com,923159675198,"Peshawar, Pakistan",Lyftron,Data Scientist,1.5,Yes,Yes,2022-12-20T19:19:17.573616Z,Computer Science,21,BS,1,1,1,e52d1f26fd7818b846f9241256fa03997e3a97f8f92d10c717df51e5b8989da7

@@ -1,0 +1,3 @@
+,id,name,email,phone,location,company,position,cgpa,is_employed,is_student,createdAt,department_name,batch_name,program_name,department,batch,program
+0,56,Jamil,twitter@gmail.com,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,2022-12-19T13:09:48.672384Z,Computer Science,21,BS,1,1,1
+1,54,hazrat ali,hazrat.ali@gmail.com,923159675198,"Peshawar, Pakistan",DevtSoft,Engineer,2.3,Yes,Yes,2022-12-19T13:09:48.622597Z,Computer Science,21,BS,1,1,1
