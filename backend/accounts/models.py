@@ -4,25 +4,23 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from .utils import generate_hash
 
 
-
-def upload_to(instance, filename):
+def bulk_alumnus(instance, filename):
     return 'bulk_alumni/{filename}'.format(filename=filename)
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email,password=None):
         if not email:
             raise ValueError('Users must have an email address')
-
         user = self.model(
             email=self.normalize_email(email),
-        )
-        
+        )        
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -35,7 +33,6 @@ class MyUserManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
-
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -72,8 +69,7 @@ class MyUser(AbstractBaseUser):
             dept = str(Department.objects.get(name=self.department_id))
             return self.email + " Represents " + dept
         except:
-            return self.email
-    
+            return self.email 
     
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -85,13 +81,11 @@ class MyUser(AbstractBaseUser):
         # Simplest possible answer: Yes, always
         return True
 
-
     @property
     def is_staff(self):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
-
 
     def create_superuser(self, email, password=None):
         """
@@ -101,20 +95,19 @@ class MyUser(AbstractBaseUser):
         user = self.create_user(
             email,
             password=password,
-
         )
         user.is_admin = True
         user.save(using=self._db)
         return user
     
 
-
 class Program(models.Model):
     name = models.CharField(max_length=200)
     
     def __str__(self) -> str:
         return self.name
-    
+
+
 class Batch(models.Model):
     name = models.CharField(max_length=200)
     
@@ -122,7 +115,6 @@ class Batch(models.Model):
         return self.name
 
 
-    
 # import hashlib
 
 # def generate_hash():
@@ -148,11 +140,7 @@ class Alumni(models.Model):
     program =  models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True)
     createdAt =models.DateTimeField(auto_now_add=True)
     hash_data =     models.CharField(max_length=64, default= generate_hash)
-
-    
-    
-    
-    
+  
     def __str__(self) -> str:
         return self.name
     
@@ -162,13 +150,10 @@ class Report(models.Model):
     createdAt =models.DateTimeField(auto_now_add=True)
     report = models.FileField(upload_to ='reports/', blank=True, null=True)
     entries = models.IntegerField(blank=True, null=True)
-    
-
-    
+       
     def __str__(self) -> str:
         return self.name
     
-
     
 class BulkAlumni(models.Model):
     # creator = models.ForeignKey(
@@ -176,21 +161,19 @@ class BulkAlumni(models.Model):
     title = models.CharField(
         max_length=80, blank=False, null=False)
     description = models.TextField (max_length=80, blank=True, null=True)
-    file_url = models.FileField(upload_to=upload_to, blank=False, null=False)
+    file_url = models.FileField(upload_to=bulk_alumnus, blank=False, null=False)
     
     def __str__(self) -> str:
         return self.title
     
     def parse_file(self):
         file_obj =  self.file_url
-
         # # parse it 
         import pandas as pd
         df = pd.read_excel(file_obj)
         d=df.T.to_dict().values()
         alumni_list=list(d)
-        for alumni in alumni_list:   
-            
+        for alumni in alumni_list:         
             department_instance =  Department.objects.get(name=alumni['department'])
             batch_instance = Batch.objects.get(name=alumni['batch'])
             program_instance = Program.objects.get(name=alumni['program'])
@@ -211,11 +194,8 @@ class BulkAlumni(models.Model):
         )
             alumni_obj.save()
 
-    
-    
+      
 class OneTimeLink(models.Model):
     link = models.CharField(max_length=255)
     expiration_date = models.DateTimeField()
-    
-    
-    
+        
