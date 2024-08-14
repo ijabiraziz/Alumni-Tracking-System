@@ -20,7 +20,7 @@ An online platform built with Django and Django REST Framework to help education
 
 # Installation [Backend]
 Clone the repository:
-git clone https://github.com/your-username/Alumni-Tracking-System.git](https://github.com/ijabiraziz/Alumni-Tracking-System.git)
+git clone https://github.com/ijabiraziz/Alumni-Tracking-System.git
 
 Create a virtual environment and activate it:
 python -m venv env
