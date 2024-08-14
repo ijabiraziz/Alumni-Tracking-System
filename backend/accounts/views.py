@@ -1,43 +1,34 @@
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from accounts.models import MyUser,Department, Alumni
-from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer,ReportSerializer
-from django.db.models import Q
+from pathlib import Path
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, HttpResponse, reverse
+from django.core.files import File
+from django.db.models import Q
+
+from rest_framework import status, permissions, viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .utils import get_tokens_for_user
-from .serializers import  PasswordChangeSerializer, UserUpdateSerializer,UserDetailSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import BulkAlumni, Report, Batch, Program
-from .serializers import BulkAlumniSerializer
-from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import viewsets
+from .models import BulkAlumni, Report, Batch, Program, OneTimeLink
+from accounts.models import MyUser,Department, Alumni
+from accounts.serializers import RegistrationSerializer,MyUserSerializer, DepartmentSerializer, AlumniSerializer,DashboardStatsSerializer,ReportSerializer
 
-from pathlib import Path
-from django.core.files import File
+from .serializers import  PasswordChangeSerializer, UserUpdateSerializer,UserDetailSerializer
+from .serializers import BulkAlumniSerializer, BatchSerializer, ProgramSerializer, OneTimeLinkSerializer
 
-from .utils import get_random_string
-from django.contrib.auth.hashers import make_password
-from .serializers import BatchSerializer, ProgramSerializer
-
-
-from django.shortcuts import render, HttpResponse, reverse
-from .serializers import OneTimeLinkSerializer
-from .models import OneTimeLink
-from .utils import generate_hash
-
-
+from .utils import get_random_string, generate_hash, get_tokens_for_user
 
 
 @api_view(['GET'])
 def get_routes(request):
     return Response('Base Route')
+
 
 @api_view(['GET'])
 def list_users(request):
@@ -47,13 +38,11 @@ def list_users(request):
 
 
 @api_view(['GET'])
-def user_detail(request):
-    
+def user_detail(request):    
     try:
         user = MyUser.objects.get(request.user)
     except:
         return Response({'message':'The User is Not Available' },status=status.HTTP_400_BAD_REQUEST)
-    
     if request.method == 'GET':
         serializer = MyUserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -61,7 +50,7 @@ def user_detail(request):
     
 @api_view(['POST'])
 def register_user(request):
-    print(request.data)
+    # print(request.data)
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -72,17 +61,13 @@ def register_user(request):
 @api_view(['POST'])
 def login_user(request):
     if 'email' not in request.data or 'password' not in request.data:
-        return Response({'msg': 'Credentials missing'}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response({'msg': 'Credentials missing'}, status=status.HTTP_400_BAD_REQUEST)    
     email = request.data['email']
     password = request.data['password']
     user = authenticate(request, email=email, password= password)
     
     instance = MyUser.objects.filter(email=email)[0]
-    print(instance.name)
-    
-    
-
+    # print(instance.name)
     if user is not None:
         login(request, user)
         auth_data = get_tokens_for_user(request.user)
@@ -115,8 +100,6 @@ def getUserProfile(requests):
     return Response(serializer.data)
 
 
-
-
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
@@ -128,8 +111,7 @@ def change_password(request):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except :
         message ={'detail': 'unable'}
-        return Response(message,status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(message,status=status.HTTP_400_BAD_REQUEST)  
     
 
 @api_view(['GET'])
@@ -137,7 +119,8 @@ def list_departments(request):
     deptt = Department.objects.all()
     serializer = DepartmentSerializer(deptt, many=True)
     return Response (serializer.data)
-    
+
+
 @api_view(['POST'])
 def add_alumni(request):
     serializer = AlumniSerializer(data=request.data)
@@ -157,7 +140,6 @@ def add_bulk_alumni(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 @api_view(['GET'])
 def dashboard_stats(request):
     alumni = Alumni.objects.all()
@@ -172,6 +154,7 @@ def recent_alumnis(request):
     serializer = AlumniSerializer(l_alumni, many=True)
     return Response (serializer.data)
 
+
 @api_view(['GET'])
 def list_alumnis(request):
     alumni =reversed( Alumni.objects.all())
@@ -184,7 +167,6 @@ def list_bs_alumnis(request):
     alumni =reversed( Alumni.objects.filter(program=1))
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
-
     
 
 @api_view(['GET'])
@@ -192,8 +174,7 @@ def list_ms_alumnis(request):
     alumni =reversed( Alumni.objects.filter(program=2))
     serializer = AlumniSerializer(alumni, many=True)
     return Response (serializer.data)
-
-    
+  
 
 @api_view(['GET'])
 def list_phd_alumnis(request):
@@ -242,11 +223,13 @@ def list_reports(request):
     serializer =ReportSerializer(reports, many=True)
     return Response (serializer.data)
 
+
 @api_view(['GET'])
 def list_batch(request):
     reports =Batch.objects.all()
     serializer =BatchSerializer(reports, many=True)
     return Response (serializer.data)
+
 
 @api_view(['GET'])
 def list_program(request):
@@ -254,9 +237,11 @@ def list_program(request):
     serializer =ProgramSerializer(reports, many=True)
     return Response (serializer.data)
 
+
 import string
 import random
 from django.utils import timezone
+
 
 def generate_one_time_link():
   base_url = "localhost:8000"
@@ -264,6 +249,7 @@ def generate_one_time_link():
   random_text = ''.join(random.choices(characters, k=8))
   one_time_link = base_url + "/" + random_text
   return one_time_link
+
 
 @api_view(['POST'])
 def one_time_link_view(request):
@@ -275,10 +261,10 @@ def one_time_link_view(request):
     serializer = OneTimeLinkSerializer(one_time_link)
     return Response(serializer.data)
 
+
 @api_view(['PATCH','GET'])
 def update_alumni(request, hash_data):
-    # Retrieve the model instance
-    
+    # Retrieve the model instance   
     instance = Alumni.objects.get( hash_data=hash_data)
     # Update the model instance with the data in the request
     if request.method == 'PATCH':
@@ -286,7 +272,6 @@ def update_alumni(request, hash_data):
     serializer = AlumniSerializer(instance, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-
     return Response(serializer.data)
 
 from django.core.mail import send_mail
@@ -321,29 +306,23 @@ def send_email(request ):
     return Response('Message Send Successfully')
 
 
-
-
 @api_view(['GET','POST'])
 def search_alumni(request):
     if request.method == 'GET':
         qu = Alumni.objects.all()
         serializer = AlumniSerializer(qu, many=True)  
         print(serializer.data)     
-        return Response(serializer.data)
-        
-    elif request.method == 'POST':
-        
+        return Response(serializer.data)       
+    elif request.method == 'POST':       
         name = request.GET.get('name')
         location = request.GET.get('location')
         email =request.GET.get('email')
         phone =request.GET.get('phone')
         company=request.GET.get('company')
         position =request.GET.get('position')
-    
-    
+
     # program = request.GET.get('program')
-    
-    
+ 
         if name :
             # search model based on multiple fields
             results = Alumni.objects.filter(
@@ -382,13 +361,8 @@ def search_alumni(request):
             
             )
             results.union(position_results)
-   
-            
-
-        
         serializer = AlumniSerializer(results, many=True)
-        print(serializer.data)
-            
+        print(serializer.data)           
         return Response(serializer.data)
     else:
         return Response('Bad Request Please do GET or Post')
